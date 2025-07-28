@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "990481899232",
+    "project_id": "elves-7a53f",
+    "storage_bucket": "elves-7a53f.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:990481899232:android:0a395917b33858bab77a85",
+        "android_client_info": {
+          "package_name": "com.example.quicklo_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAxjiwg-GDEFDioYtufOpfzKIaZ2HA2PrQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
