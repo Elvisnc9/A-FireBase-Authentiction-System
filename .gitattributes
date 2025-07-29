@@ -5,4 +5,4 @@ build/ linguist-vendored
 test/ linguist-vendored
 
 # Mark Dart files as the main language
-lib/** linguist-detectable=true
+lib/ linguist-detectable=true
