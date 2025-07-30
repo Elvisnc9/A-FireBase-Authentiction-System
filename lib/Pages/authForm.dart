@@ -26,7 +26,7 @@ class _AuthFormState extends State<AuthForm> {
         body: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.only(
-              top: 10.h,
+              top: 8.h,
               bottom: 2.h,
               left: 4.w,
               right: 4.w,
@@ -187,6 +187,7 @@ class PureForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           'Your number & email address',
