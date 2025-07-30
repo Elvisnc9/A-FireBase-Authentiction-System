@@ -348,9 +348,10 @@ class SocialAuthentications extends StatelessWidget {
 
 // Socials widget to display individual social authentication buttons
 class Socials extends StatelessWidget {
-  const Socials({super.key, required this.image, required this.name});
+  const Socials({super.key, required this.image, required this.name, this.onTap});
   final String image;
   final String name;
+  final void Function()? onTap;
 
   @override
   Widget build(BuildContext context) {
