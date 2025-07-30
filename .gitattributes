@@ -3,6 +3,9 @@ android/ linguist-vendored
 ios/ linguist-vendored
 build/ linguist-vendored
 test/ linguist-vendored
+windows/ linguist-generated
+macos/ linguist-generated
+linux/ linguist-generated
 
 # Mark Dart files as the main language
 lib/ linguist-detectable=true
