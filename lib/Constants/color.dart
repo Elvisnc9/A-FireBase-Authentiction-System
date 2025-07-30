@@ -10,6 +10,7 @@ class AppColors{
   static const Color grey = Color(0xFFE0E0E0);
   static const Color lightbox = Color(0xFF9E9E9E);
   static const Color darkbox =   Color(0xFF26242e);
+    static const Color yellow2= Color.fromARGB(255, 245, 249, 4);
 
   static const LinearGradient mygradient = LinearGradient(colors: [
     Color(0xFFe48400),

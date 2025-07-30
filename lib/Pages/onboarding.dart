@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:quicklo_app/Constants/color.dart';
 import 'package:quicklo_app/Widget/edge-to-edge.dart';
+import 'package:quicklo_app/Widget/submitButton.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 
 class Onboarding  extends StatelessWidget {
@@ -42,28 +43,11 @@ class Onboarding  extends StatelessWidget {
 
               ),
           
-                Padding(
-                  padding:  EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
-                  child: GestureDetector(
-                    onTap: (){
-                        Navigator.of(context).pushNamed('/SignUp');
-                    },
-                    child: Container(
-                      height: 7.h,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        gradient: AppColors.mygradient,
-                        borderRadius: BorderRadius.circular(20)
-                      ),
-                      child: Center(
-                        child: Text(
-                          'Get Started',
-                          style: Theme.of(context).textTheme.labelMedium
-                        ),
-                      )
-                    ),
-                  ),
-                )
+                SubmitButton(name: 'Get Started',
+                 push: () { 
+            Navigator.of(context).pushNamed('/SignUp');
+     
+                  },)
               ],
             ),
           ),
@@ -72,3 +56,4 @@ class Onboarding  extends StatelessWidget {
     );
   }
 }
+

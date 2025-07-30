@@ -6,18 +6,22 @@ import 'package:quicklo_app/Constants/color.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 
 final ThemeData darkTheme = ThemeData(
-  brightness: Brightness.dark,
   scaffoldBackgroundColor: AppColors.dark,
   primaryColor: AppColors.darkbox,
-  textTheme: myTextTheme
+  textTheme: myTextTheme,
+   colorScheme:ColorScheme.fromSeed(seedColor: AppColors.yellow),
+   useMaterial3: true,
+   brightness: Brightness.light
 );
 
 
 final ThemeData lightTheme = ThemeData(
-  brightness: Brightness.light,
   scaffoldBackgroundColor: AppColors.light,
     primaryColor: AppColors.lightbox,
-    textTheme: myTextTheme
+    textTheme: myTextTheme,
+    colorScheme:ColorScheme.fromSeed(seedColor: AppColors.yellow),
+    useMaterial3: true,
+     brightness: Brightness.light
 );
 
 
@@ -46,7 +50,13 @@ final TextTheme myTextTheme = TextTheme(
     fontSize: 25.sp,
     fontWeight: FontWeight.w500,
     color: AppColors.light
-  )
+  ),
+
+  displaySmall: GoogleFonts.poppins(
+    fontSize:15.sp,
+    fontWeight: FontWeight.w500,
+    color: AppColors.lightbox
+  ),
 
 );
 
