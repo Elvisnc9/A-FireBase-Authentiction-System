@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:quicklo_app/Constants/color.dart';
+import 'package:quicklo_app/Services/social_auth.dart';
+import 'package:quicklo_app/Widget/divider.dart';
 import 'package:quicklo_app/Widget/edge-to-edge.dart';
 import 'package:quicklo_app/Widget/submitButton.dart';
+import 'package:quicklo_app/Widget/title.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 
 class AuthForm extends StatefulWidget {
@@ -34,7 +37,7 @@ class _AuthFormState extends State<AuthForm> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Title(widget: widget),
+                Headtitle(widget: widget),
 
                 SizedBox(height: 5.h),
 
@@ -127,10 +130,6 @@ class _AuthFormState extends State<AuthForm> {
                 //Social Authentication Buttons
 
                 SocialAuthentications(widget: widget),
-
-
-
-
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -249,23 +248,6 @@ class PureForm extends StatelessWidget {
 }
 
 // Title widget for the AuthPages
-class Title extends StatelessWidget {
-  const Title({
-    super.key,
-    required this.widget,
-  });
-
-  final AuthForm widget;
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      widget.isSignUp? 'Create your account' : 'Login to your account',
-      textAlign: TextAlign.left,
-      style: Theme.of(context).textTheme.headlineLarge,
-    );
-  }
-}
 
 
 // Submit button widget that handles navigation based on the form type
@@ -290,97 +272,3 @@ class Submit extends StatelessWidget {
 }
 
 
-// Divider widget to separate the social authentication buttons
-class Dividerz extends StatelessWidget {
-  const Dividerz({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: Divider(color: AppColors.grey, thickness: 0.2),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          child: Text(
-            'Or',
-            style: Theme.of(context).textTheme.displaySmall,
-          ),
-        ),
-        Expanded(
-          child: Divider(color: AppColors.grey, thickness: 0.2),
-        ),
-      ],
-    );
-  }
-}
-
-
-// Social authentication buttons
-class SocialAuthentications extends StatelessWidget {
-  const SocialAuthentications({
-    super.key,
-    required this.widget,
-  });
-
-  final AuthForm widget;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Socials(
-          image: 'assets/Icons/google.png',
-          name: widget.isSignUp? 'Sign Up with Google' : 'Log In with Google',
-        ),
-        Socials(
-          image: 'assets/Icons/facebook.png',
-          name: widget.isSignUp? 'Sign Up with Facebook' : 'Log In with Facebook',
-        ),
-      ],
-    );
-  }
-}
-
-
-// Socials widget to display individual social authentication buttons
-class Socials extends StatelessWidget {
-  const Socials({super.key, required this.image, required this.name, this.onTap});
-  final String image;
-  final String name;
-  final void Function()? onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Container(
-        height: 7.5.h,
-        width: double.infinity,
-        decoration: BoxDecoration(
-          color: AppColors.darkbox,
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 3.w),
-              child: SizedBox(height: 2.5.h, child: Image.asset(image)),
-            ),
-
-            Text(
-              name,
-              style: Theme.of(
-                context,
-              ).textTheme.labelMedium?.copyWith(fontSize: 12.sp),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}

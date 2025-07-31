@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:quicklo_app/Constants/color.dart';
 import 'package:quicklo_app/Constants/theme.dart';
+import 'package:quicklo_app/Pages/home.dart';
 import 'package:quicklo_app/Pages/login.dart';
 import 'package:quicklo_app/Pages/onboarding.dart';
 import 'package:quicklo_app/Pages/signup.dart';
@@ -15,42 +16,42 @@ Future<void> main() async {
     TheResponsiveBuilder(
       builder: (context, orientation, screenType) {
         return const MyApp();
-      }
-    ));
+      },
+    ),
+  );
 }
-
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      
       theme: lightTheme,
       darkTheme: darkTheme,
       themeMode: ThemeMode.system,
       title: 'Authentication System',
-  
+
       routes: {
-        '/Onboarding' : (context) => Onboarding(),
-        '/LogIn' : (context) => LogInScreen(),
-        '/SignUp' : (context) => SignUpScreen(),
+        '/Onboarding': (context) => Onboarding(),
+        '/LogIn': (context) => LogInScreen(),
+        '/SignUp': (context) => SignUpScreen(),
+        '/Home': (context) => HomeScreen(),
       },
       home: StreamBuilder(
-        stream: AuthService().authChanges
-      , builder: (context, snapshot){
-        if(snapshot.connectionState == ConnectionState.waiting){
-          return  Center(child: CircularProgressIndicator(
-            color:  AppColors.yellow ,
-          ));
-        }
-        if(snapshot.hasData ){
-          return const Onboarding();
-        }else{
-          return const SignUpScreen();
-        }
-      })    );
+        stream: AuthService().authChanges,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(color: AppColors.yellow),
+            );
+          }
+          if (snapshot.hasData) {
+            return const HomeScreen();
+          } else {
+            return const LogInScreen();
+          }
+        },
+      ),
+    );
   }
 }
-
- 

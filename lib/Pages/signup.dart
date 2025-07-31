@@ -8,7 +8,6 @@ class SignUpScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return AuthForm(
       isSignUp: true,
-         
          );
 }
 }
