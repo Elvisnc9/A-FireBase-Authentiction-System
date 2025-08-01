@@ -20,6 +20,16 @@ class AuthForm extends StatefulWidget {
 
 class _AuthFormState extends State<AuthForm> {
   bool rememberMe = false;
+
+  String email = '', password = '', confirmPassword = '';
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController confirmPasswordController = TextEditingController();
+
+  registration(){
+    
+  }
+
   @override
   Widget build(BuildContext context) {
     return EdgeToEdgeWrapperWidget(

@@ -5,7 +5,7 @@ import 'package:the_responsive_builder/the_responsive_builder.dart';
 class Socials extends StatelessWidget {
   const Socials({super.key, required this.image,
    required this.name,
-    this.onTap});
+    this.onTap, CircularProgressIndicator? child});
   final String image;
   final String name;
   final void Function()? onTap;

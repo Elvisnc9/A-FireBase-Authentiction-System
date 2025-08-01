@@ -19,6 +19,7 @@ class SocialAuthentications extends StatefulWidget {
 
 class _SocialAuthenticationsState extends State<SocialAuthentications> {
     final AuthService _authMethod = AuthService();
+    bool _isloading = false;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -27,20 +28,30 @@ class _SocialAuthenticationsState extends State<SocialAuthentications> {
           image: 'assets/Icons/google.png',
           name: widget.widget.isSignUp? 'Sign Up with Google' : 'Log In with Google',
           onTap: () async {
+           setState(() {
+              _isloading = true;
+            });
             bool res = await _authMethod.signInWithGoogle(context);
-            if(res) {
-              // Navigate to the home screen if login is successful
 
-              // ignore: use_build_context_synchronously
+            if (res) {
+              // Wait for a duration before navigating
+              await Future.delayed(const Duration(seconds: 2)); // Set duration here
+              setState(() {
+                _isloading = false;
+              });
               Navigator.pushNamed(context, '/Home');
             } else {
-              // Handle error if login fails
+              setState(() {
+                _isloading = false;
+              });
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Login failed, please try again')),
+                const SnackBar(content: Text('Login failed, please try again')),
               );
             }
-            // Handle Google login
           },
+          child: _isloading
+              ? CircularProgressIndicator(color: AppColors.yellow)
+              : null,
         ),
         Socials(
           image: 'assets/Icons/facebook.png',
