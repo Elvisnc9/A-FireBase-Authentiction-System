@@ -1,5 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:quicklo_app/Constants/color.dart';
+import 'package:quicklo_app/Services/authMethod.dart';
 import 'package:quicklo_app/Services/social_auth.dart';
 import 'package:quicklo_app/Widget/divider.dart';
 import 'package:quicklo_app/Widget/edge-to-edge.dart';
@@ -20,15 +23,34 @@ class AuthForm extends StatefulWidget {
 
 class _AuthFormState extends State<AuthForm> {
   bool rememberMe = false;
+  final formKey = GlobalKey<FormState>()
+  String errormMessage ='';
 
   String email = '', password = '', confirmPassword = '';
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
 
-  registration(){
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
+  void register()async {
+    try{
+    authMethod.value.createAccount(
+      email: emailController.text, password: passwordController.text);
+
+    }on FirebaseAuthException catch (e){
+      setState(() {
+        errormMessage = e.message ?? "There is an error ";
+      });
+    }
     
   }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -222,6 +244,9 @@ class PureForm extends StatelessWidget {
             ),
           ),
           keyboardType: TextInputType.emailAddress,
+          validator: (value) {
+            
+          },
         ),
         SizedBox(height: 1.h),
         

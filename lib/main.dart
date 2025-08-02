@@ -12,6 +12,7 @@ import 'package:the_responsive_builder/the_responsive_builder.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  
   runApp(
     TheResponsiveBuilder(
       builder: (context, orientation, screenType) {
