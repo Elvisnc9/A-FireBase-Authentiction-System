@@ -45,9 +45,7 @@ class _AuthFormState extends State<AuthForm> {
       return 'Email is Required';
       
     }
-    final emailregrex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-    if(!emailregrex.hasMatch(value)){
-      return 'Enter a Valid email';
+
     }
     return null;
   }
@@ -120,236 +118,238 @@ class _AuthFormState extends State<AuthForm> {
               left: 4.w,
               right: 4.w,
             ),
-            child: Form(
-              key: formKey,
-              autovalidateMode: AutovalidateMode.disabled,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Headtitle(widget: widget),
-              
-                  SizedBox(height: 5.h),
-              
-                  Text(
-                    'Your number & email address',
-                    style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                      fontSize: 12.sp,
-                      color: AppColors.grey,
+            child: SizedBox(
+              child: Form(
+                key: formKey,
+                autovalidateMode: AutovalidateMode.disabled,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Headtitle(widget: widget),
+                
+                    SizedBox(height: 5.h),
+                
+                    Text(
+                      'Your number & email address',
+                      style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                        fontSize: 12.sp,
+                        color: AppColors.grey,
+                      ),
                     ),
-                  ),
-                  
-                  SizedBox(height: 1.h),
-                  
-                  TextFormField(
-                    decoration: InputDecoration(
-                      hintText: 'angelia@yahoo.com',
-                      hintStyle: TextStyle(
-                       fontWeight: FontWeight.bold,
+                    
+                    SizedBox(height: 1.h),
+                    
+                    TextFormField(
+                      decoration: InputDecoration(
+                        hintText: 'angelia@yahoo.com',
+                        hintStyle: TextStyle(
+                         fontWeight: FontWeight.bold,
+                         
+                        ),
+                        filled: true,
+                      fillColor: AppColors.lightbox.withOpacity(0.2),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                      ),
+                      keyboardType: TextInputType.emailAddress,
+                      validator: emailValidator,
+                      onChanged: (value) {
+                        setState(() {
+                          emailError = emailValidator(value);
+                        });
+                      },
+                    ),
+                    
+                    if (emailError !=null)
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        emailError!,
+                        style: TextStyle(color: Colors.red, fontSize: 12),
+                      ),
+                    ),
+                    SizedBox(height: 1.h),
+                    
+                    
+                    //PASSWORD
+                    Text(
+                      'Enter Your Password',
+                      style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                        fontSize: 12.sp,
+                        color: AppColors.grey,
+                      ),
+                    ),
+                    SizedBox(height: 1.h),
+                    
+                    // Password Field
+                    TextFormField(
+                                  
+                      decoration: InputDecoration(
+                        hintText: '8 characters minimum',
+                        hintStyle: TextStyle(
+                         fontWeight: FontWeight.bold,
+                         
+                        ),
                        
-                      ),
                       filled: true,
-                    fillColor: AppColors.lightbox.withOpacity(0.2),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(16),
+                      fillColor: AppColors.lightbox.withOpacity(0.2),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
                       ),
+                      obscureText: true,
+                    
+                        validator: passwordValidator,
+                            onChanged: (value) {
+                              setState(() {
+                                passwordError = passwordValidator(value);
+                              });
+                            },
+                          ),
+                          if (passwordError != null)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 4, left: 4),
+                              child: Text(
+                                passwordError!,
+                                style: const TextStyle(color: Colors.red, fontSize: 13),
+                              ),
+                            
                     ),
-                    keyboardType: TextInputType.emailAddress,
-                    validator: emailValidator,
-                    onChanged: (value) {
+                
+                    //ADD CONFIRM PASSWORD FIELD IF SIGN UP
+                    widget.isSignUp
+                        ? Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(height: 1.h),
+                            Text(
+                              'Confirm Password',
+                              style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                                fontSize: 12.sp,
+                                color: AppColors.grey,
+                              ),
+                            ),
+                            SizedBox(height: 1.h),
+                            TextFormField(
+                              decoration: InputDecoration(
+                                hintText: '8 characters minimum',
+                        hintStyle: TextStyle(
+                         fontWeight: FontWeight.bold,
+                         
+                        ),
+                                filled: true,
+                      fillColor: AppColors.lightbox.withOpacity(0.2),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                              ),
+                              obscureText: true,
+                              validator: confirmPasswordValidator,
+                    onChanged: (val) {
                       setState(() {
-                        emailError = emailValidator(value);
+                        confirmPasswordError = confirmPasswordValidator(val);
                       });
                     },
                   ),
-                  
-                  if (emailError !=null)
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      emailError!,
-                      style: TextStyle(color: Colors.red, fontSize: 12),
-                    ),
-                  ),
-                  SizedBox(height: 1.h),
-                  
-                  
-                  //PASSWORD
-                  Text(
-                    'Enter Your Password',
-                    style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                      fontSize: 12.sp,
-                      color: AppColors.grey,
-                    ),
-                  ),
-                  SizedBox(height: 1.h),
-                  
-                  // Password Field
-                  TextFormField(
-                                
-                    decoration: InputDecoration(
-                      hintText: '8 characters minimum',
-                      hintStyle: TextStyle(
-                       fontWeight: FontWeight.bold,
-                       
-                      ),
-                     
-                    filled: true,
-                    fillColor: AppColors.lightbox.withOpacity(0.2),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(16),
+                  if (confirmPasswordError != null)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 4, left: 4),
+                      child: Text(
+                        confirmPasswordError!,
+                        style: const TextStyle(color: Colors.red, fontSize: 13),
                       ),
                     ),
-                    obscureText: true,
-                  
-                      validator: passwordValidator,
-                          onChanged: (value) {
+                            
+                          ],
+                        )
+                        : SizedBox(height: 1.h,),
+                
+                        
+                   
+                    //Remember Me And A Forgotten Password Button
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Checkbox(
+                          checkColor: Colors.black,
+                          activeColor: AppColors.yellow,
+                          value: rememberMe,
+                          onChanged: (bool? value) {
                             setState(() {
-                              passwordError = passwordValidator(value);
+                              rememberMe = value!;
                             });
                           },
                         ),
-                        if (passwordError != null)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 4, left: 4),
-                            child: Text(
-                              passwordError!,
-                              style: const TextStyle(color: Colors.red, fontSize: 13),
-                            ),
-                          
-                  ),
-              
-                  //ADD CONFIRM PASSWORD FIELD IF SIGN UP
-                  widget.isSignUp
-                      ? Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(height: 1.h),
-                          Text(
-                            'Confirm Password',
-                            style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                              fontSize: 12.sp,
-                              color: AppColors.grey,
+                
+                        Text(
+                          'Remember Me',
+                          style: Theme.of(
+                            context,
+                          ).textTheme.labelMedium?.copyWith(fontSize: 11.sp),
+                        ),
+                
+                        Spacer(),
+                
+                        TextButton(
+                          onPressed: () {},
+                          child: Text(
+                            'Forgotten Password',
+                            style: Theme.of(
+                              context,
+                            ).textTheme.labelMedium?.copyWith(
+                              fontSize: 10.sp,
+                              color: AppColors.yellow,
                             ),
                           ),
-                          SizedBox(height: 1.h),
-                          TextFormField(
-                            decoration: InputDecoration(
-                              hintText: '8 characters minimum',
-                      hintStyle: TextStyle(
-                       fontWeight: FontWeight.bold,
-                       
-                      ),
-                              filled: true,
-                    fillColor: AppColors.lightbox.withOpacity(0.2),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                            ),
-                            obscureText: true,
-                            validator: confirmPasswordValidator,
-                  onChanged: (val) {
-                    setState(() {
-                      confirmPasswordError = confirmPasswordValidator(val);
-                    });
-                  },
-                ),
-                if (confirmPasswordError != null)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 4, left: 4),
-                    child: Text(
-                      confirmPasswordError!,
-                      style: const TextStyle(color: Colors.red, fontSize: 13),
+                        ),
+                      ],
                     ),
-                  ),
-                          
-                        ],
-                      )
-                      : SizedBox(height: 1.h,),
+                
+                    //LOGIN BUTTON
+                   SubmitButton(push: (){
+                    widget.isSignUp? onSignUp() : onLogin();
               
-                      
-                 
-                  //Remember Me And A Forgotten Password Button
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Checkbox(
-                        checkColor: Colors.black,
-                        activeColor: AppColors.yellow,
-                        value: rememberMe,
-                        onChanged: (bool? value) {
-                          setState(() {
-                            rememberMe = value!;
-                          });
-                        },
-                      ),
-              
-                      Text(
-                        'Remember Me',
-                        style: Theme.of(
-                          context,
-                        ).textTheme.labelMedium?.copyWith(fontSize: 11.sp),
-                      ),
-              
-                      Spacer(),
-              
-                      TextButton(
-                        onPressed: () {},
-                        child: Text(
-                          'Forgotten Password',
+                   }, name: widget.isSignUp? 'Sign Up': 'Log In'),
+                
+                    SizedBox(height: 1.h),
+                
+                    //Divider
+                    Dividerz(),
+                
+                    SizedBox(height: 2.h),
+                
+                    //Social Authentication Buttons
+                
+                    SocialAuthentications(widget: widget),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          widget.isSignUp? 'Already have an account?' : 'Don\'t have an account?',
                           style: Theme.of(
                             context,
-                          ).textTheme.labelMedium?.copyWith(
-                            fontSize: 10.sp,
-                            color: AppColors.yellow,
+                          ).textTheme.labelMedium?.copyWith(fontSize: 12.sp),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            widget.isSignUp? Navigator.pushNamed(context, '/LogIn') :
+                            Navigator.pushNamed(context, '/SignUp');
+                          },
+                          child: Text(
+                            widget.isSignUp? 'Log In' : 'Create an account',
+                            style: Theme.of(
+                              context,
+                            ).textTheme.labelMedium?.copyWith(
+                              fontSize: 12.sp,
+                              color: AppColors.yellow,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-              
-                  //LOGIN BUTTON
-                 SubmitButton(push: (){
-                  widget.isSignUp? onSignUp() : onLogin();
-
-                 }, name: widget.isSignUp? 'Sign Up': 'Log In'),
-              
-                  SizedBox(height: 1.h),
-              
-                  //Divider
-                  Dividerz(),
-              
-                  SizedBox(height: 2.h),
-              
-                  //Social Authentication Buttons
-              
-                  SocialAuthentications(widget: widget),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        widget.isSignUp? 'Already have an account?' : 'Don\'t have an account?',
-                        style: Theme.of(
-                          context,
-                        ).textTheme.labelMedium?.copyWith(fontSize: 12.sp),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          widget.isSignUp? Navigator.pushNamed(context, '/LogIn') :
-                          Navigator.pushNamed(context, '/SignUp');
-                        },
-                        child: Text(
-                          widget.isSignUp? 'Log In' : 'Create an account',
-                          style: Theme.of(
-                            context,
-                          ).textTheme.labelMedium?.copyWith(
-                            fontSize: 12.sp,
-                            color: AppColors.yellow,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
