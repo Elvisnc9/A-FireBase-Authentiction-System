@@ -38,21 +38,22 @@ class MyApp extends StatelessWidget {
         '/SignUp': (context) => SignUpScreen(),
         '/Home': (context) => HomeScreen(),
       },
-      home: StreamBuilder(
-        stream: AuthService().authChanges,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(color: AppColors.yellow),
-            );
-          }
-          if (snapshot.hasData) {
-            return const HomeScreen();
-          } else {
-            return const LogInScreen();
-          }
-        },
-      ),
+       initialRoute: '/LogIn',
+      // StreamBuilder(
+      //   stream: AuthService().authChanges,
+      //   builder: (context, snapshot) {
+      //     if (snapshot.connectionState == ConnectionState.waiting) {
+      //       return Center(
+      //         child: CircularProgressIndicator(color: AppColors.yellow),
+      //       );
+      //     }
+      //     if (snapshot.hasData) {
+      //       return const ;
+      //     } else {
+      //       return const LogInScreen();
+      //     }
+      //   },
+      // ),
     );
   }
 }

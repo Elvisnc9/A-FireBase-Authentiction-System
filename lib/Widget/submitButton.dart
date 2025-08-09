@@ -3,7 +3,7 @@ import 'package:quicklo_app/Constants/color.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 
 class SubmitButton extends StatelessWidget {
-  final VoidCallback push;
+  final VoidCallback? push;
   final String name;
   const SubmitButton({
     super.key, required this.push, required this.name,

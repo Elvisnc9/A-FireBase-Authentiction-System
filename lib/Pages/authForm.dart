@@ -66,6 +66,9 @@ class _AuthFormState extends State<AuthForm> {
     return null;
   }
 
+
+
+
   Future<void> onSignUp() async {
     setState(() {
       emailError = emailValidator(emailController.text);
@@ -87,6 +90,7 @@ class _AuthFormState extends State<AuthForm> {
           passwordError = null;
           confirmPasswordError = null;
         });
+        Navigator.pushReplacementNamed(context, '/LogIn');
       } on FirebaseAuthException catch (e) {
         setState(() {
           switch (e.code) {
@@ -113,6 +117,10 @@ class _AuthFormState extends State<AuthForm> {
     });
   }
 
+
+
+
+
   Future<void> onLogin() async {
     setState(() {
       emailError = emailValidator(emailController.text);
@@ -130,6 +138,7 @@ class _AuthFormState extends State<AuthForm> {
           emailError = null;
           passwordError = null;
         });
+        Navigator.pushReplacementNamed(context, '/Home');
       } on FirebaseAuthException catch (e) {
         setState(() {
           switch (e.code) {
@@ -161,243 +170,241 @@ class _AuthFormState extends State<AuthForm> {
       child: Scaffold(
         resizeToAvoidBottomInset: true,
         backgroundColor: AppColors.dark,
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.only(
-              top: 8.h,
-              bottom: 2.h,
-              left: 4.w,
-              right: 4.w,
-            ),
-            child: Form(
-              key: formKey,
-              autovalidateMode: AutovalidateMode.disabled,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Headtitle(widget: widget),
-                  SizedBox(height: 5.h),
-                  Text(
-                    'Your number & email address',
-                    style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                          fontSize: 12.sp,
-                          color: AppColors.grey,
-                        ),
-                  ),
-                  SizedBox(height: 1.h),
-                  TextFormField(
-                    style: TextStyle(
-                      color : Colors.white,
-                      fontWeight: FontWeight.bold
-                    ),
-                    controller: emailController,
-                    decoration: InputDecoration(
-                      
-                      hintText: 'angelia@yahoo.com',
-                      hintStyle: TextStyle(fontWeight: FontWeight.bold),
-                      filled: true,
-                      fillColor: AppColors.lightbox.withOpacity(0.2),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                    ),
-                    keyboardType: TextInputType.emailAddress,
-                    
-                    validator: emailValidator,
-                    onChanged: (value) {
-                      setState(() {
-                        emailError = emailValidator(value);
-                      });
-                    },
-                  ),
-                  if (emailError != null)
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        emailError!,
-                        style: TextStyle(color: Colors.red, fontSize: 12),
-                      ),
-                    ),
-                  SizedBox(height: 1.h),
-                  Text(
-                    'Enter Your Password',
-                    style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                          fontSize: 12.sp,
-                          color: AppColors.grey,
-                        ),
-                  ),
-                  SizedBox(height: 1.h),
-                  TextFormField(
-                    controller: passwordController,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold
-                    ),
-                    decoration: InputDecoration(
-                      hintText: '8 characters minimum',
-                      hintStyle: TextStyle(fontWeight: FontWeight.bold),
-                      filled: true,
-                      fillColor: AppColors.lightbox.withOpacity(0.2),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                    ),
-                    obscureText: true,
-                    validator: passwordValidator,
-                    onChanged: (value) {
-                      setState(() {
-                        passwordError = passwordValidator(value);
-                      });
-                    },
-                  ),
-                  if (passwordError != null)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 4, left: 4),
-                      child: Text(
-                        passwordError!,
-                        style: const TextStyle(color: Colors.red, fontSize: 13),
-                      ),
-                    ),
-                  widget.isSignUp
-                      ? Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(height: 1.h),
-                            Text(
-                              'Confirm Password',
-                              style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                                    fontSize: 12.sp,
-                                    color: AppColors.grey,
-                                  ),
+        body: Stack(
+          children: [
+            SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.only(
+                  top: 8.h,
+                  bottom: 2.h,
+                  left: 4.w,
+                  right: 4.w,
+                ),
+                child: Form(
+                  key: formKey,
+                  autovalidateMode: AutovalidateMode.disabled,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Headtitle(widget: widget),
+                      SizedBox(height: 5.h),
+                      Text(
+                        'Your number & email address',
+                        style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                              fontSize: 12.sp,
+                              color: AppColors.grey,
                             ),
-                            SizedBox(height: 1.h),
-                            TextFormField(
-                              controller: confirmPasswordController,
-                              style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold
-                    ),
-                              decoration: InputDecoration(
-                                hintText: '8 characters minimum',
-                                hintStyle: TextStyle(fontWeight: FontWeight.bold),
-                                filled: true,
-                                fillColor: AppColors.lightbox.withOpacity(0.2),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(16),
+                      ),
+                      SizedBox(height: 1.h),
+                      TextFormField(
+                        style: TextStyle(
+                          color : Colors.white,
+                          fontWeight: FontWeight.bold
+                        ),
+                        controller: emailController,
+                        decoration: InputDecoration(
+                          
+                          hintText: 'yourName@gmail.com',
+                          hintStyle: TextStyle(fontWeight: FontWeight.bold),
+                          filled: true,
+                          fillColor: AppColors.lightbox.withOpacity(0.2),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                        ),
+                        keyboardType: TextInputType.emailAddress,
+                        
+                        validator: emailValidator,
+                        onChanged: (value) {
+                          setState(() {
+                            emailError = emailValidator(value);
+                          });
+                        },
+                      ),
+                     
+                      SizedBox(height: 1.h),
+            
+                      
+                      Text(
+                        'Enter Your Password',
+                        style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                              fontSize: 12.sp,
+                              color: AppColors.grey,
+                            ),
+                      ),
+                      SizedBox(height: 1.h),
+                      TextFormField(
+                        controller: passwordController,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold
+                        ),
+                        decoration: InputDecoration(
+                          hintText: '8 characters minimum',
+                          hintStyle: TextStyle(fontWeight: FontWeight.bold),
+                          filled: true,
+                          fillColor: AppColors.lightbox.withOpacity(0.2),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                        ),
+                        obscureText: true,
+                        validator: passwordValidator,
+                        onChanged: (value) {
+                          setState(() {
+                            passwordError = passwordValidator(value);
+                          });
+                        },
+                      ),
+                      if (passwordError != null)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 4, left: 4),
+                          child: Text(
+                            passwordError!,
+                            style: const TextStyle(color: Colors.red, fontSize: 13),
+                          ),
+                        ),
+                      widget.isSignUp
+                          ? Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(height: 1.h),
+                                Text(
+                                  'Confirm Password',
+                                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                                        fontSize: 12.sp,
+                                        color: AppColors.grey,
+                                      ),
                                 ),
-                              ),
-                              obscureText: true,
-                              validator: confirmPasswordValidator,
-                              onChanged: (val) {
+                                SizedBox(height: 1.h),
+                                TextFormField(
+                                  controller: confirmPasswordController,
+                                  style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold
+                        ),
+                                  decoration: InputDecoration(
+                                    hintText: '8 characters minimum',
+                                    hintStyle: TextStyle(fontWeight: FontWeight.bold),
+                                    filled: true,
+                                    fillColor: AppColors.lightbox.withOpacity(0.2),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(16),
+                                    ),
+                                  ),
+                                  obscureText: true,
+                                  validator: confirmPasswordValidator,
+                                  onChanged: (val) {
+                                    setState(() {
+                                      confirmPasswordError = confirmPasswordValidator(val);
+                                    });
+                                  },
+                                ),
+                               
+                              ],
+                            )
+                          : SizedBox(height: 1.h),
+            
+                        //Remember Me And A Forgotten Password Button
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Checkbox(
+                              checkColor: Colors.black,
+                              activeColor: AppColors.yellow,
+                              value: rememberMe,
+                              onChanged: (bool? value) {
                                 setState(() {
-                                  confirmPasswordError = confirmPasswordValidator(val);
+                                  rememberMe = value!;
                                 });
                               },
                             ),
-                            if (confirmPasswordError != null)
-                              Padding(
-                                padding: const EdgeInsets.only(top: 4, left: 4),
-                                child: Text(
-                                  confirmPasswordError!,
-                                  style: const TextStyle(color: Colors.red, fontSize: 13),
+            
+                            Text(
+                              'Remember Me',
+                              style: Theme.of(
+                                context,
+                              ).textTheme.labelMedium?.copyWith(fontSize: 11.sp),
+                            ),
+            
+                            Spacer(),
+            
+                            TextButton(
+                              onPressed: () {},
+                              child: Text(
+                                'Forgotten Password',
+                                style: Theme.of(
+                                  context,
+                                ).textTheme.labelMedium?.copyWith(
+                                  fontSize: 10.sp,
+                                  color: AppColors.yellow,
                                 ),
                               ),
-                          ],
-                        )
-                      : SizedBox(height: 1.h),
-
-                    //Remember Me And A Forgotten Password Button
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Checkbox(
-                          checkColor: Colors.black,
-                          activeColor: AppColors.yellow,
-                          value: rememberMe,
-                          onChanged: (bool? value) {
-                            setState(() {
-                              rememberMe = value!;
-                            });
-                          },
-                        ),
-
-                        Text(
-                          'Remember Me',
-                          style: Theme.of(
-                            context,
-                          ).textTheme.labelMedium?.copyWith(fontSize: 11.sp),
-                        ),
-
-                        Spacer(),
-
-                        TextButton(
-                          onPressed: () {},
-                          child: Text(
-                            'Forgotten Password',
-                            style: Theme.of(
-                              context,
-                            ).textTheme.labelMedium?.copyWith(
-                              fontSize: 10.sp,
-                              color: AppColors.yellow,
                             ),
-                          ),
+                          ],
                         ),
-                      ],
-                    ),
-
-                    //LOGIN BUTTON
-                    SubmitButton(
-                      push: () {
-                        widget.isSignUp ? onSignUp() : onLogin();
-                      },
+            
+                        //LOGIN BUTTON
+                         SubmitButton(
+                      push: isLoading
+                        ? null // disables button when loading
+                        : () {
+                            widget.isSignUp ? onSignUp() : onLogin();
+                          },
                       name: widget.isSignUp ? 'Sign Up' : 'Log In',
                     ),
-
-                    SizedBox(height: 1.h),
-
-                    //Divider
-                    Dividerz(),
-
-                    SizedBox(height: 2.h),
-
-                    //Social Authentication Buttons
-                    SocialAuthentications(widget: widget),
-
-
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          widget.isSignUp
-                              ? 'Already have an account?'
-                              : 'Don\'t have an account?',
-                          style: Theme.of(
-                            context,
-                          ).textTheme.labelMedium?.copyWith(fontSize: 12.sp),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            widget.isSignUp
-                                ? Navigator.pushNamed(context, '/LogIn')
-                                : Navigator.pushNamed(context, '/SignUp');
-                          },
-                          child: Text(
-                            widget.isSignUp ? 'Log In' : 'Create an account',
-                            style: Theme.of(
-                              context,
-                            ).textTheme.labelMedium?.copyWith(
-                              fontSize: 12.sp,
-                              color: AppColors.yellow,
+            
+                        SizedBox(height: 1.h),
+            
+                        //Divider
+                        Dividerz(),
+            
+                        SizedBox(height: 2.h),
+            
+                        //Social Authentication Buttons
+                        SocialAuthentications(widget: widget),
+            
+            
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              widget.isSignUp
+                                  ? 'Already have an account?'
+                                  : 'Don\'t have an account?',
+                              style: Theme.of(
+                                context,
+                              ).textTheme.labelMedium?.copyWith(fontSize: 12.sp),
                             ),
-                          ),
+                            TextButton(
+                              onPressed: () {
+                                widget.isSignUp
+                                    ? Navigator.pushNamed(context, '/LogIn')
+                                    : Navigator.pushNamed(context, '/SignUp');
+                              },
+                              child: Text(
+                                widget.isSignUp ? 'Log In' : 'Create an account',
+                                style: Theme.of(
+                                  context,
+                                ).textTheme.labelMedium?.copyWith(
+                                  fontSize: 12.sp,
+                                  color: AppColors.yellow,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
-                  ],
+                  ),
                 ),
               ),
-            ),
-          ),
+              if (isLoading)
+            Container(
+              color: Colors.black.withOpacity(0.5),
+              child: const Center(child: CircularProgressIndicator()),)
+          ],
+        ),
         ),
     );
   }
