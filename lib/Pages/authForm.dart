@@ -42,6 +42,7 @@ class _AuthFormState extends State<AuthForm> {
   String? emailValidator(String? value) {
     if (value == null || value.isEmpty) {
       return 'Email is required';
+      
     }
     return null;
   }
@@ -171,7 +172,7 @@ class _AuthFormState extends State<AuthForm> {
   }
 
 
-  
+
 
   @override
   Widget build(BuildContext context) {
