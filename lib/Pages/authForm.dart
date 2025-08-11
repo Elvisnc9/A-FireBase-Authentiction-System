@@ -131,13 +131,12 @@ class _AuthFormState extends State<AuthForm> {
     setState(() {
       emailError = emailValidator(emailController.text);
       passwordError = passwordValidator(passwordController.text);
-     
     });
 
     if (formKey.currentState!.validate()) {
-      setState(() {
-        isLoading = true;
-      });
+     setState(() {
+       isLoading = true;
+     });
       try {
         await authMethod.value.signIn(
           email: emailController.text.trim(),
@@ -146,6 +145,7 @@ class _AuthFormState extends State<AuthForm> {
         setState(() {
           emailError = null;
           passwordError = null;
+         
         });
         Navigator.pushReplacementNamed(context, '/Home');
       } on FirebaseAuthException catch (e) {
@@ -164,13 +164,16 @@ class _AuthFormState extends State<AuthForm> {
         });
       } catch (e) {
         setState(() {
+        
           passwordError = 'An unexpected error occurred';
         });
       }
+
     }
-    setState(() {
+     setState(() {
       isLoading = false;
     });
+   
   }
 
 
