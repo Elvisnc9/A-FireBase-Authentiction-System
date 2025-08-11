@@ -21,6 +21,8 @@ class AuthForm extends StatefulWidget {
 }
 
 class _AuthFormState extends State<AuthForm> {
+  bool passwordVisible = false;
+  bool confirmPasswordVisible = false;
   bool rememberMe = false;
   final formKey = GlobalKey<FormState>();
   String? emailError, passwordError, confirmPasswordError;
@@ -42,7 +44,7 @@ class _AuthFormState extends State<AuthForm> {
   String? emailValidator(String? value) {
     if (value == null || value.isEmpty) {
       return 'Email is required';
-      
+
     }
     return null;
   }
@@ -250,6 +252,16 @@ class _AuthFormState extends State<AuthForm> {
                           fontWeight: FontWeight.bold
                         ),
                         decoration: InputDecoration(
+                          suffixIcon: IconButton(
+                            onPressed: (){
+                              setState(() {
+                                passwordVisible = !passwordVisible;
+                              });
+
+                            }, icon: Icon( passwordVisible? Icons.visibility: Icons.visibility_off,
+                            color: AppColors.lightbox,
+                            
+                            )),
                           hintText: '8 characters minimum',
                           hintStyle: TextStyle(fontWeight: FontWeight.bold),
                           filled: true,
@@ -258,7 +270,9 @@ class _AuthFormState extends State<AuthForm> {
                             borderRadius: BorderRadius.circular(16),
                           ),
                         ),
-                        obscureText: true,
+
+                        
+                        obscureText: !passwordVisible,
                         validator: passwordValidator,
                         onChanged: (value) {
                           setState(() {
@@ -274,6 +288,9 @@ class _AuthFormState extends State<AuthForm> {
                             style: const TextStyle(color: Colors.red, fontSize: 13),
                           ),
                         ),
+
+
+
                       widget.isSignUp
                           ? Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -298,11 +315,20 @@ class _AuthFormState extends State<AuthForm> {
                                     hintStyle: TextStyle(fontWeight: FontWeight.bold),
                                     filled: true,
                                     fillColor: AppColors.lightbox.withOpacity(0.2),
+
+                                    suffixIcon: IconButton( onPressed: (){
+                              setState(() {
+                                confirmPasswordVisible = !confirmPasswordVisible;
+                              });
+
+                            }, icon: Icon( confirmPasswordVisible? Icons.visibility: Icons.visibility_off,
+                            color: AppColors.lightbox,
+                                     ),),
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(16),
                                     ),
                                   ),
-                                  obscureText: true,
+                                  obscureText: !confirmPasswordVisible,
                                   validator: confirmPasswordValidator,
                                   onChanged: (val) {
                                     setState(() {
