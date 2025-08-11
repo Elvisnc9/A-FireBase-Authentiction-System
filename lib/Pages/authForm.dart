@@ -74,10 +74,12 @@ class _AuthFormState extends State<AuthForm> {
       emailError = emailValidator(emailController.text);
       passwordError = passwordValidator(passwordController.text);
       confirmPasswordError = confirmPasswordValidator(confirmPasswordController.text);
-      isLoading = true;
     });
 
     if (formKey.currentState!.validate()) {
+      setState(() {
+        isLoading = true;
+      });
       try {
         await authMethod.value.createAccount(
           email: emailController.text.trim(),
@@ -86,6 +88,7 @@ class _AuthFormState extends State<AuthForm> {
         // On success, navigate or show success UI
         // For now, clear errors
         setState(() {
+          
           emailError = null;
           passwordError = null;
           confirmPasswordError = null;
@@ -125,10 +128,13 @@ class _AuthFormState extends State<AuthForm> {
     setState(() {
       emailError = emailValidator(emailController.text);
       passwordError = passwordValidator(passwordController.text);
-      isLoading = true;
+     
     });
 
     if (formKey.currentState!.validate()) {
+      setState(() {
+        isLoading = true;
+      });
       try {
         await authMethod.value.signIn(
           email: emailController.text.trim(),
@@ -163,6 +169,9 @@ class _AuthFormState extends State<AuthForm> {
       isLoading = false;
     });
   }
+
+
+  
 
   @override
   Widget build(BuildContext context) {
