@@ -41,10 +41,12 @@ class _AuthFormState extends State<AuthForm> {
     super.dispose();
   }
 
+  final emailRegExp = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$');
   String? emailValidator(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Email is required';
+    if (!emailRegExp.hasMatch(value!)) return 'Enter a valid Email';
 
+    if (value.isEmpty) {
+      return 'Email is required';
     }
     return null;
   }
@@ -69,14 +71,13 @@ class _AuthFormState extends State<AuthForm> {
     return null;
   }
 
-
-
-
   Future<void> onSignUp() async {
     setState(() {
       emailError = emailValidator(emailController.text);
       passwordError = passwordValidator(passwordController.text);
-      confirmPasswordError = confirmPasswordValidator(confirmPasswordController.text);
+      confirmPasswordError = confirmPasswordValidator(
+        confirmPasswordController.text,
+      );
     });
 
     if (formKey.currentState!.validate()) {
@@ -91,7 +92,6 @@ class _AuthFormState extends State<AuthForm> {
         // On success, navigate or show success UI
         // For now, clear errors
         setState(() {
-          
           emailError = null;
           passwordError = null;
           confirmPasswordError = null;
@@ -100,7 +100,6 @@ class _AuthFormState extends State<AuthForm> {
       } on FirebaseAuthException catch (e) {
         setState(() {
           switch (e.code) {
-            case 'email-already-in-use':
             case 'invalid-email':
               emailError = e.message;
               break;
@@ -126,7 +125,6 @@ class _AuthFormState extends State<AuthForm> {
 
 
 
-
   Future<void> onLogin() async {
     setState(() {
       emailError = emailValidator(emailController.text);
@@ -134,9 +132,9 @@ class _AuthFormState extends State<AuthForm> {
     });
 
     if (formKey.currentState!.validate()) {
-     setState(() {
-       isLoading = true;
-     });
+      setState(() {
+        isLoading = true;
+      });
       try {
         await authMethod.value.signIn(
           email: emailController.text.trim(),
@@ -145,39 +143,34 @@ class _AuthFormState extends State<AuthForm> {
         setState(() {
           emailError = null;
           passwordError = null;
-         
         });
         Navigator.pushReplacementNamed(context, '/Home');
       } on FirebaseAuthException catch (e) {
         setState(() {
           switch (e.code) {
             case 'user-not-found':
+            emailError =' No account found on this email';
+            break;
             case 'invalid-email':
               emailError = e.message;
               break;
             case 'wrong-password':
-              passwordError = e.message;
+              passwordError = 'Incorrect Password';
               break;
             default:
-              passwordError = e.message;
+              passwordError = ' Invalid credentials';
           }
         });
       } catch (e) {
         setState(() {
-        
           passwordError = 'An unexpected error occurred';
         });
       }
-
     }
-     setState(() {
+    setState(() {
       isLoading = false;
     });
-   
   }
-
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -205,20 +198,17 @@ class _AuthFormState extends State<AuthForm> {
                       SizedBox(height: 5.h),
                       Text(
                         'Your number & email address',
-                        style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                              fontSize: 12.sp,
-                              color: AppColors.grey,
-                            ),
+                        style: Theme.of(context).textTheme.labelMedium
+                            ?.copyWith(fontSize: 12.sp, color: AppColors.grey),
                       ),
                       SizedBox(height: 1.h),
                       TextFormField(
                         style: TextStyle(
-                          color : Colors.white,
-                          fontWeight: FontWeight.bold
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
                         ),
                         controller: emailController,
                         decoration: InputDecoration(
-                          
                           hintText: 'yourName@gmail.com',
                           hintStyle: TextStyle(fontWeight: FontWeight.bold),
                           filled: true,
@@ -228,7 +218,7 @@ class _AuthFormState extends State<AuthForm> {
                           ),
                         ),
                         keyboardType: TextInputType.emailAddress,
-                        
+
                         validator: emailValidator,
                         onChanged: (value) {
                           setState(() {
@@ -236,35 +226,43 @@ class _AuthFormState extends State<AuthForm> {
                           });
                         },
                       ),
-                     
+                      if (emailError != null)
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            emailError!,
+                            style: TextStyle(color: Colors.red, fontSize: 12),
+                          ),
+                        ),
+
                       SizedBox(height: 1.h),
-            
-                      
+
                       Text(
                         'Enter Your Password',
-                        style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                              fontSize: 12.sp,
-                              color: AppColors.grey,
-                            ),
+                        style: Theme.of(context).textTheme.labelMedium
+                            ?.copyWith(fontSize: 12.sp, color: AppColors.grey),
                       ),
                       SizedBox(height: 1.h),
                       TextFormField(
                         controller: passwordController,
                         style: TextStyle(
                           color: Colors.white,
-                          fontWeight: FontWeight.bold
+                          fontWeight: FontWeight.bold,
                         ),
                         decoration: InputDecoration(
                           suffixIcon: IconButton(
-                            onPressed: (){
+                            onPressed: () {
                               setState(() {
                                 passwordVisible = !passwordVisible;
                               });
-
-                            }, icon: Icon( passwordVisible? Icons.visibility: Icons.visibility_off,
-                            color: AppColors.lightbox,
-                            
-                            )),
+                            },
+                            icon: Icon(
+                              passwordVisible
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                              color: AppColors.lightbox,
+                            ),
+                          ),
                           hintText: '8 characters minimum',
                           hintStyle: TextStyle(fontWeight: FontWeight.bold),
                           filled: true,
@@ -274,7 +272,6 @@ class _AuthFormState extends State<AuthForm> {
                           ),
                         ),
 
-                        
                         obscureText: !passwordVisible,
                         validator: passwordValidator,
                         onChanged: (value) {
@@ -288,163 +285,177 @@ class _AuthFormState extends State<AuthForm> {
                           padding: const EdgeInsets.only(top: 4, left: 4),
                           child: Text(
                             passwordError!,
-                            style: const TextStyle(color: Colors.red, fontSize: 13),
+                            style: const TextStyle(
+                              color: Colors.red,
+                              fontSize: 13,
+                            ),
                           ),
                         ),
 
-
-
                       widget.isSignUp
                           ? Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                SizedBox(height: 1.h),
-                                Text(
-                                  'Confirm Password',
-                                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                                        fontSize: 12.sp,
-                                        color: AppColors.grey,
-                                      ),
-                                ),
-                                SizedBox(height: 1.h),
-                                TextFormField(
-                                  controller: confirmPasswordController,
-                                  style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold
-                        ),
-                                  decoration: InputDecoration(
-                                    hintText: '8 characters minimum',
-                                    hintStyle: TextStyle(fontWeight: FontWeight.bold),
-                                    filled: true,
-                                    fillColor: AppColors.lightbox.withOpacity(0.2),
-
-                                    suffixIcon: IconButton( onPressed: (){
-                              setState(() {
-                                confirmPasswordVisible = !confirmPasswordVisible;
-                              });
-
-                            }, icon: Icon( confirmPasswordVisible? Icons.visibility: Icons.visibility_off,
-                            color: AppColors.lightbox,
-                                     ),),
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(16),
-                                    ),
-                                  ),
-                                  obscureText: !confirmPasswordVisible,
-                                  validator: confirmPasswordValidator,
-                                  onChanged: (val) {
-                                    setState(() {
-                                      confirmPasswordError = confirmPasswordValidator(val);
-                                    });
-                                  },
-                                ),
-                               
-                              ],
-                            )
-                          : SizedBox(height: 1.h),
-            
-                        //Remember Me And A Forgotten Password Button
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Checkbox(
-                              checkColor: Colors.black,
-                              activeColor: AppColors.yellow,
-                              value: rememberMe,
-                              onChanged: (bool? value) {
-                                setState(() {
-                                  rememberMe = value!;
-                                });
-                              },
-                            ),
-            
-                            Text(
-                              'Remember Me',
-                              style: Theme.of(
-                                context,
-                              ).textTheme.labelMedium?.copyWith(fontSize: 11.sp),
-                            ),
-            
-                            Spacer(),
-            
-                            TextButton(
-                              onPressed: () {},
-                              child: Text(
-                                'Forgotten Password',
-                                style: Theme.of(
-                                  context,
-                                ).textTheme.labelMedium?.copyWith(
-                                  fontSize: 10.sp,
-                                  color: AppColors.yellow,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-            
-                        //LOGIN BUTTON
-                         SubmitButton(
-                      push: isLoading
-                        ? null // disables button when loading
-                        : () {
-                            widget.isSignUp ? onSignUp() : onLogin();
-                          },
-                      name: widget.isSignUp ? 'Sign Up' : 'Log In',
-                    ),
-            
-                        SizedBox(height: 1.h),
-            
-                        //Divider
-                        Dividerz(),
-            
-                        SizedBox(height: 2.h),
-            
-                        //Social Authentication Buttons
-                        SocialAuthentications(widget: widget),
-            
-            
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              widget.isSignUp
-                                  ? 'Already have an account?'
-                                  : 'Don\'t have an account?',
-                              style: Theme.of(
-                                context,
-                              ).textTheme.labelMedium?.copyWith(fontSize: 12.sp),
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                widget.isSignUp
-                                    ? Navigator.pushNamed(context, '/LogIn')
-                                    : Navigator.pushNamed(context, '/SignUp');
-                              },
-                              child: Text(
-                                widget.isSignUp ? 'Log In' : 'Create an account',
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(height: 1.h),
+                              Text(
+                                'Confirm Password',
                                 style: Theme.of(
                                   context,
                                 ).textTheme.labelMedium?.copyWith(
                                   fontSize: 12.sp,
-                                  color: AppColors.yellow,
+                                  color: AppColors.grey,
                                 ),
                               ),
+                              SizedBox(height: 1.h),
+                              TextFormField(
+                                controller: confirmPasswordController,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                decoration: InputDecoration(
+                                  hintText: '8 characters minimum',
+                                  hintStyle: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  filled: true,
+                                  fillColor: AppColors.lightbox.withOpacity(
+                                    0.2,
+                                  ),
+
+                                  suffixIcon: IconButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        confirmPasswordVisible =
+                                            !confirmPasswordVisible;
+                                      });
+                                    },
+                                    icon: Icon(
+                                      confirmPasswordVisible
+                                          ? Icons.visibility
+                                          : Icons.visibility_off,
+                                      color: AppColors.lightbox,
+                                    ),
+                                  ),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+                                ),
+                                obscureText: !confirmPasswordVisible,
+                                validator: confirmPasswordValidator,
+                                onChanged: (val) {
+                                  setState(() {
+                                    confirmPasswordError =
+                                        confirmPasswordValidator(val);
+                                  });
+                                },
+                              ),
+                            ],
+                          )
+                          : SizedBox(height: 1.h),
+
+                      //Remember Me And A Forgotten Password Button
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Checkbox(
+                            checkColor: Colors.black,
+                            activeColor: AppColors.yellow,
+                            value: rememberMe,
+                            onChanged: (bool? value) {
+                              setState(() {
+                                rememberMe = value!;
+                              });
+                            },
+                          ),
+
+                          Text(
+                            'Remember Me',
+                            style: Theme.of(
+                              context,
+                            ).textTheme.labelMedium?.copyWith(fontSize: 11.sp),
+                          ),
+
+                          Spacer(),
+
+                          TextButton(
+                            onPressed: () {},
+                            child: Text(
+                              'Forgotten Password',
+                              style: Theme.of(
+                                context,
+                              ).textTheme.labelMedium?.copyWith(
+                                fontSize: 10.sp,
+                                color: AppColors.yellow,
+                              ),
                             ),
-                          ],
-                        ),
-                      ],
-                    ),
+                          ),
+                        ],
+                      ),
+
+                      //LOGIN BUTTON
+                      SubmitButton(
+                        push:
+                            isLoading
+                                ? null // disables button when loading
+                                : () {
+                                  widget.isSignUp ? onSignUp() : onLogin();
+                                },
+                        name: widget.isSignUp ? 'Sign Up' : 'Log In',
+                      ),
+
+                      SizedBox(height: 1.h),
+
+                      //Divider
+                      Dividerz(),
+
+                      SizedBox(height: 2.h),
+
+                      //Social Authentication Buttons
+                      SocialAuthentications(widget: widget),
+
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            widget.isSignUp
+                                ? 'Already have an account?'
+                                : 'Don\'t have an account?',
+                            style: Theme.of(
+                              context,
+                            ).textTheme.labelMedium?.copyWith(fontSize: 12.sp),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              widget.isSignUp
+                                  ? Navigator.pushNamed(context, '/LogIn')
+                                  : Navigator.pushNamed(context, '/SignUp');
+                            },
+                            child: Text(
+                              widget.isSignUp ? 'Log In' : 'Create an account',
+                              style: Theme.of(
+                                context,
+                              ).textTheme.labelMedium?.copyWith(
+                                fontSize: 12.sp,
+                                color: AppColors.yellow,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
               ),
-              if (isLoading)
-            Container(
-              color: Colors.black.withOpacity(0.5),
-              child: const Center(child: CircularProgressIndicator()),)
+            ),
+            if (isLoading)
+              Container(
+                color: Colors.black.withOpacity(0.5),
+                child: const Center(child: CircularProgressIndicator()),
+              ),
           ],
         ),
-        ),
+      ),
     );
   }
 }
