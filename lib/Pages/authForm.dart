@@ -219,12 +219,7 @@ class _AuthFormState extends State<AuthForm> {
                         ),
                         keyboardType: TextInputType.emailAddress,
 
-                        validator: emailValidator,
-                        onChanged: (value) {
-                          setState(() {
-                            emailError = emailValidator(value);
-                          });
-                        },
+                       
                       ),
                       if (emailError != null)
                         Padding(
@@ -273,12 +268,7 @@ class _AuthFormState extends State<AuthForm> {
                         ),
 
                         obscureText: !passwordVisible,
-                        validator: passwordValidator,
-                        onChanged: (value) {
-                          setState(() {
-                            passwordError = passwordValidator(value);
-                          });
-                        },
+                       
                       ),
                       if (passwordError != null)
                         Padding(
@@ -342,13 +332,7 @@ class _AuthFormState extends State<AuthForm> {
                                   ),
                                 ),
                                 obscureText: !confirmPasswordVisible,
-                                validator: confirmPasswordValidator,
-                                onChanged: (val) {
-                                  setState(() {
-                                    confirmPasswordError =
-                                        confirmPasswordValidator(val);
-                                  });
-                                },
+                               
                               ),
                             ],
                           )
