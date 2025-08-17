@@ -339,27 +339,29 @@ class _AuthFormState extends State<AuthForm> {
 
                       //Remember Me And A Forgotten Password Button
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Checkbox(
-                            checkColor: Colors.black,
-                            activeColor: AppColors.yellow,
-                            value: rememberMe,
-                            onChanged: (bool? value) {
-                              setState(() {
-                                rememberMe = value!;
-                              });
-                            },
-                          ),
-
-                          Text(
+                         widget.isSignUp?
+                          Row(
+                            children: [
+                              Checkbox(
+                                checkColor: Colors.black,
+                                activeColor: AppColors.yellow,
+                                value: rememberMe,
+                                onChanged: (bool? value) {
+                                  setState(() {
+                                    rememberMe = value!;
+                                  });
+                                },
+                              ),
+                              Text(
                             'Remember Me',
                             style: Theme.of(
                               context,
                             ).textTheme.labelMedium?.copyWith(fontSize: 11.sp),
                           ),
-
-                          Spacer(),
+                            ],
+                          ) : Spacer(),
 
                           TextButton(
                             onPressed: () {},
