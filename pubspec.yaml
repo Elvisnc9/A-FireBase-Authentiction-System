@@ -41,8 +41,7 @@ dependencies:
   google_fonts: 
   the_responsive_builder: 
   lottie:
-  local_auth: 
-  cloud_firestore:
+  local_auth:
   flutter_secure_storage:
 
 dev_dependencies: 
