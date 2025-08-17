@@ -13,7 +13,6 @@ import 'package:the_responsive_builder/the_responsive_builder.dart';
 
 class AuthForm extends StatefulWidget {
   final bool isSignUp;
-
   const AuthForm({super.key, required this.isSignUp});
 
   @override
