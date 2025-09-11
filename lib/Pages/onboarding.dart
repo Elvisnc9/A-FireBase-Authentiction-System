@@ -5,7 +5,7 @@ import 'package:quicklo_app/Widget/edge-to-edge.dart';
 import 'package:quicklo_app/Widget/submitButton.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 
-class Onboarding  extends StatelessWidget {
+class Onboarding extends StatelessWidget {
   const Onboarding ({super.key});
   @override
   Widget build(BuildContext context) {
@@ -40,9 +40,7 @@ class Onboarding  extends StatelessWidget {
           
               SizedBox(
                 height: 14.h
-
               ),
-          
                 SubmitButton(name: 'Get Started',
                  push: () { 
             Navigator.of(context).pushNamed('/SignUp');

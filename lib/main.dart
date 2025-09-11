@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
         '/SignUp': (context) => SignUpScreen(),
         '/Home': (context) => HomeScreen(),
       },
-       initialRoute: '/LogIn',
+       initialRoute: '/Onboarding',
       // StreamBuilder(
       //   stream: AuthService().authChanges,
       //   builder: (context, snapshot) {

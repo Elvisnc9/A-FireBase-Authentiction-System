@@ -37,12 +37,13 @@ dependencies:
   firebase_core: ^3.14.0
   firebase_auth: ^5.6.2
   cloud_firestore: ^5.6.11
-  google_sign_in: ^5.4.2
+  google_sign_in:
   google_fonts: 
   the_responsive_builder: 
   lottie:
   local_auth:
   flutter_secure_storage:
+  flutter_riverpod:
 
 dev_dependencies: 
   flutter_test:
