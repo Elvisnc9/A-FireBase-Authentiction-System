@@ -23,7 +23,6 @@ class AuthMethod {
   }
 
   //CreateAccount
-
   Future<UserCredential> createAccount({
     required String email,
     required String password,

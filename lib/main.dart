@@ -1,12 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:quicklo_app/Constants/color.dart';
 import 'package:quicklo_app/Constants/theme.dart';
 import 'package:quicklo_app/Pages/home.dart';
 import 'package:quicklo_app/Pages/login.dart';
 import 'package:quicklo_app/Pages/onboarding.dart';
 import 'package:quicklo_app/Pages/signup.dart';
-import 'package:quicklo_app/Services/google_auth.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 
 Future<void> main() async {
