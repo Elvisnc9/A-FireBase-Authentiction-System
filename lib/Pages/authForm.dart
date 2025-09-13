@@ -1,10 +1,8 @@
-// ignore_for_file: no_logic_in_create_state
+// ignore_for_file: no_logic_in_create_state, dead_code
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quicklo_app/Constants/color.dart';
-import 'package:quicklo_app/Services/authMethod.dart';
 import 'package:quicklo_app/Services/social_auth.dart';
 import 'package:quicklo_app/Widget/divider.dart';
 import 'package:quicklo_app/Widget/edge-to-edge.dart';
@@ -21,7 +19,8 @@ class AuthForm extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final formState = ref.watch(authFormProvider);
     final formNotifier = ref.read(authFormProvider.notifier);
-
+    bool isLoading = false;
+    bool rememberMe = false;
 
     return EdgeToEdgeWrapperWidget(
       child: Scaffold(
@@ -42,146 +41,45 @@ class AuthForm extends ConsumerWidget {
                   children: [
                     Headtitle(widget: this),
                     SizedBox(height: 5.h),
-                    EmailField(formState: formState, onChanged: formNotifier,)
-                    
-                
-                    SizedBox(height: 1.h),
-                
-                    Text(
-                      'Enter Your Password',
-                      style: Theme.of(context).textTheme.labelMedium
-                          ?.copyWith(fontSize: 12.sp, color: AppColors.grey),
+                    EmailField(
+                      formState: formState,
+                      onChanged: formNotifier.updateEmail,
                     ),
+
                     SizedBox(height: 1.h),
-                    TextFormField(
-                      controller: passwordController,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      decoration: InputDecoration(
-                        suffixIcon: IconButton(
-                          onPressed: () {
-                            setState(() {
-                              passwordVisible = !passwordVisible;
-                            });
-                          },
-                          icon: Icon(
-                            passwordVisible
-                                ? Icons.visibility
-                                : Icons.visibility_off,
-                            color: AppColors.lightbox,
-                          ),
-                        ),
-                        hintText: '8 characters minimum',
-                        hintStyle: TextStyle(fontWeight: FontWeight.bold),
-                        filled: true,
-                        fillColor: AppColors.lightbox.withOpacity(0.2),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                      ),
-                
-                      obscureText: !passwordVisible,
+                    PasswordForm(
+                      formState: formState,
+                      onChanged: formNotifier.updatePassword,
                     ),
-                    if (passwordError != null)
-                      Padding(
-                        padding: const EdgeInsets.only(top: 4, left: 4),
-                        child: Text(
-                          passwordError!,
-                          style: const TextStyle(
-                            color: Colors.red,
-                            fontSize: 13,
-                          ),
-                        ),
-                      ),
-                
-                    widget.isSignUp
-                        ? Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(height: 1.h),
-                            Text(
-                              'Confirm Password',
-                              style: Theme.of(
-                                context,
-                              ).textTheme.labelMedium?.copyWith(
-                                fontSize: 12.sp,
-                                color: AppColors.grey,
-                              ),
-                            ),
-                            SizedBox(height: 1.h),
-                            TextFormField(
-                              controller: confirmPasswordController,
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                              decoration: InputDecoration(
-                                hintText: '8 characters minimum',
-                                hintStyle: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                filled: true,
-                                fillColor: AppColors.lightbox.withOpacity(
-                                  0.2,
-                                ),
-                
-                                suffixIcon: IconButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      confirmPasswordVisible =
-                                          !confirmPasswordVisible;
-                                    });
-                                  },
-                                  icon: Icon(
-                                    confirmPasswordVisible
-                                        ? Icons.visibility
-                                        : Icons.visibility_off,
-                                    color: AppColors.lightbox,
-                                  ),
-                                ),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(16),
-                                ),
-                              ),
-                              obscureText: !confirmPasswordVisible,
-                              validator: (value) {
-                                confirmPasswordValidator;
-                              },
-                            ),
-                          ],
+                    isSignUp
+                        ? updatePasswordForm(
+                          formState: formState,
+                          onchanged: formNotifier.updateConfirmPassword,
                         )
                         : SizedBox(height: 1.h),
-                
+
                     //Remember Me And A Forgotten Password Button
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        widget.isSignUp
+                        isSignUp
                             ? Row(
                               children: [
                                 Checkbox(
                                   checkColor: Colors.black,
                                   activeColor: AppColors.yellow,
                                   value: rememberMe,
-                                  onChanged: (bool? value) {
-                                    setState(() {
-                                      rememberMe = value!;
-                                    });
-                                  },
+                                  onChanged: (bool? value) {},
                                 ),
                                 Text(
                                   'Remember Me',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .labelMedium
+                                  style: Theme.of(context).textTheme.labelMedium
                                       ?.copyWith(fontSize: 11.sp),
                                 ),
                               ],
                             )
                             : Spacer(),
-                
+
                         TextButton(
                           onPressed: () {},
                           child: Text(
@@ -196,33 +94,37 @@ class AuthForm extends ConsumerWidget {
                         ),
                       ],
                     ),
-                
+
                     //LOGIN BUTTON
                     SubmitButton(
                       push:
-                          isLoading
+                          formState.isLoading
                               ? null // disables button when loading
-                              : () {
-                                widget.isSignUp ? onSignUp() : onLogin();
+                              : () async {
+                                if (isSignUp) {
+                                  await formNotifier.signUp(context);
+                                } else {
+                                  await formNotifier.login(context);
+                                }
                               },
-                      name: widget.isSignUp ? 'Sign Up' : 'Log In',
+                      name: isSignUp ? 'Sign Up' : 'Log In',
                     ),
-                
+
                     SizedBox(height: 1.h),
-                
+
                     //Divider
                     Dividerz(),
-                
+
                     SizedBox(height: 2.h),
-                
+
                     //Social Authentication Buttons
-                    SocialAuthentications(widget: widget),
-                
+                    SocialAuthentications(widget: this),
+
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          widget.isSignUp
+                          isSignUp
                               ? 'Already have an account?'
                               : 'Don\'t have an account?',
                           style: Theme.of(
@@ -231,12 +133,12 @@ class AuthForm extends ConsumerWidget {
                         ),
                         TextButton(
                           onPressed: () {
-                            widget.isSignUp
+                            isSignUp
                                 ? Navigator.pushNamed(context, '/LogIn')
                                 : Navigator.pushNamed(context, '/SignUp');
                           },
                           child: Text(
-                            widget.isSignUp ? 'Log In' : 'Create an account',
+                            isSignUp ? 'Log In' : 'Create an account',
                             style: Theme.of(
                               context,
                             ).textTheme.labelMedium?.copyWith(
@@ -251,7 +153,7 @@ class AuthForm extends ConsumerWidget {
                 ),
               ),
             ),
-            if (isLoading)
+            if (formState.isLoading)
               Container(
                 color: Colors.black.withOpacity(0.5),
                 child: const Center(child: CircularProgressIndicator()),
@@ -263,44 +165,159 @@ class AuthForm extends ConsumerWidget {
   }
 }
 
+class updatePasswordForm extends ConsumerStatefulWidget {
+  final AuthFormState formState;
+  final ValueChanged<String> onchanged;
+  const updatePasswordForm({
+    super.key,
+    required this.formState,
+    required this.onchanged,
+  });
+
+  @override
+  ConsumerState<updatePasswordForm> createState() => _updatePasswordFormState();
+}
+
+class _updatePasswordFormState extends ConsumerState<updatePasswordForm> {
+  bool PasswordVisible = false;
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(height: 1.h),
+        Text(
+          'Confirm Password',
+          style: Theme.of(context).textTheme.labelMedium?.copyWith(
+            fontSize: 12.sp,
+            color: AppColors.grey,
+          ),
+        ),
+        SizedBox(height: 1.h),
+        TextFormField(
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          decoration: InputDecoration(
+            errorText: widget.formState.confirmPasswordError,
+            hintText: '8 characters minimum',
+            hintStyle: TextStyle(fontWeight: FontWeight.bold),
+            filled: true,
+            fillColor: AppColors.lightbox.withOpacity(0.2),
+
+            suffixIcon: IconButton(
+              onPressed: () {
+                setState(() {
+                  PasswordVisible = !PasswordVisible;
+                });
+              },
+              icon: Icon(
+                PasswordVisible ? Icons.visibility : Icons.visibility_off,
+                color: AppColors.lightbox,
+              ),
+            ),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
+          ),
+          obscureText: !PasswordVisible,
+          onChanged: widget.onchanged,
+        ),
+      ],
+    );
+  }
+}
+
+class PasswordForm extends ConsumerStatefulWidget {
+  final AuthFormState formState;
+  final ValueChanged<String> onChanged;
+  const PasswordForm({
+    super.key,
+    required this.formState,
+    required this.onChanged,
+  });
+
+  @override
+  ConsumerState<PasswordForm> createState() => _PasswordFormState();
+}
+
+class _PasswordFormState extends ConsumerState<PasswordForm> {
+  bool passwordVisible = false;
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Enter Your Password',
+          style: Theme.of(context).textTheme.labelMedium?.copyWith(
+            fontSize: 12.sp,
+            color: AppColors.grey,
+          ),
+        ),
+        SizedBox(height: 1.h),
+        TextFormField(
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          decoration: InputDecoration(
+            errorText: widget.formState.passwordError,
+            suffixIcon: IconButton(
+              onPressed: () {
+                setState(() {
+                  passwordVisible = !passwordVisible;
+                });
+              },
+              icon: Icon(
+                passwordVisible ? Icons.visibility : Icons.visibility_off,
+                color: AppColors.lightbox,
+              ),
+            ),
+            hintText: '8 characters minimum',
+            hintStyle: TextStyle(fontWeight: FontWeight.bold),
+            filled: true,
+            fillColor: AppColors.lightbox.withOpacity(0.2),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
+          ),
+
+          obscureText: !passwordVisible,
+          onChanged: widget.onChanged,
+        ),
+      ],
+    );
+  }
+}
+
 class EmailField extends StatelessWidget {
   final AuthFormState formState;
   final ValueChanged<String> onChanged;
   const EmailField({
-    super.key, required this.formState, required this.onChanged,
+    super.key,
+    required this.formState,
+    required this.onChanged,
   });
 
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-      'Your number & email address',
-      style: Theme.of(context).textTheme.labelMedium
-          ?.copyWith(fontSize: 12.sp, color: AppColors.grey),
-    ),
-    SizedBox(height: 1.h),
-    TextFormField(
-
-      style: TextStyle(
-        color: Colors.white,
-        fontWeight: FontWeight.bold,
-      ),
-     
-      decoration: InputDecoration(
-        hintText: 'yourName@gmail.com',
-        hintStyle: TextStyle(fontWeight: FontWeight.bold),
-        filled: true,
-        fillColor: AppColors.lightbox.withOpacity(0.2),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
+          'Your number & email address',
+          style: Theme.of(context).textTheme.labelMedium?.copyWith(
+            fontSize: 12.sp,
+            color: AppColors.grey,
+          ),
         ),
-        errorText:  formState.emailError
-      ),
-      keyboardType: TextInputType.emailAddress,
-      onChanged: onChanged,
-    ),
-   
+        SizedBox(height: 1.h),
+        TextFormField(
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+
+          decoration: InputDecoration(
+            hintText: 'yourName@gmail.com',
+            hintStyle: TextStyle(fontWeight: FontWeight.bold),
+            filled: true,
+            fillColor: AppColors.lightbox.withOpacity(0.2),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
+            errorText: formState.emailError,
+          ),
+          keyboardType: TextInputType.emailAddress,
+          onChanged: onChanged,
+        ),
       ],
     );
   }

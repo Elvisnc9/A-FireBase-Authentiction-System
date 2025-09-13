@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quicklo_app/Constants/theme.dart';
 import 'package:quicklo_app/Pages/home.dart';
 import 'package:quicklo_app/Pages/login.dart';
@@ -12,10 +13,12 @@ Future<void> main() async {
   await Firebase.initializeApp();
   
   runApp(
-    TheResponsiveBuilder(
-      builder: (context, orientation, screenType) {
-        return const MyApp();
-      },
+    ProviderScope(
+      child: TheResponsiveBuilder(
+        builder: (context, orientation, screenType) {
+          return const MyApp();
+        },
+      ),
     ),
   );
 }

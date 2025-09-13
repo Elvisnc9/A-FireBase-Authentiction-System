@@ -1,4 +1,7 @@
+// auth_provider.dart
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 
 class AuthFormState {
   final String email;
@@ -7,6 +10,7 @@ class AuthFormState {
   final String? emailError;
   final String? passwordError;
   final String? confirmPasswordError;
+  final bool success;
   final bool isLoading;
 
   AuthFormState({
@@ -16,6 +20,7 @@ class AuthFormState {
     this.emailError,
     this.passwordError,
     this.confirmPasswordError,
+    this.success = false,
     this.isLoading = false,
   });
 
@@ -26,6 +31,7 @@ class AuthFormState {
     String? emailError,
     String? passwordError,
     String? confirmPasswordError,
+    bool? success,
     bool? isLoading,
   }) {
     return AuthFormState(
@@ -35,6 +41,7 @@ class AuthFormState {
       emailError: emailError,
       passwordError: passwordError,
       confirmPasswordError: confirmPasswordError,
+      success: success ?? this.success,
       isLoading: isLoading ?? this.isLoading,
     );
   }
@@ -45,6 +52,7 @@ class AuthFormNotifier extends StateNotifier<AuthFormState> {
 
   static final _emailRegExp = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$');
 
+  // ---------- UPDATE FIELDS ----------
   void updateEmail(String email) {
     state = state.copyWith(
       email: email,
@@ -56,20 +64,21 @@ class AuthFormNotifier extends StateNotifier<AuthFormState> {
     state = state.copyWith(
       password: password,
       passwordError: _validatePassword(password),
-      // Also update confirmPasswordError if confirmPassword is not empty
       confirmPasswordError: state.confirmPassword.isEmpty
-        ? null
-        : _validateConfirmPassword(state.confirmPassword, password),
+          ? null
+          : _validateConfirmPassword(state.confirmPassword, password),
     );
   }
 
   void updateConfirmPassword(String confirmPassword) {
     state = state.copyWith(
       confirmPassword: confirmPassword,
-      confirmPasswordError: _validateConfirmPassword(confirmPassword, state.password),
+      confirmPasswordError:
+          _validateConfirmPassword(confirmPassword, state.password),
     );
   }
 
+  // ---------- VALIDATORS ----------
   String? _validateEmail(String value) {
     if (value.isEmpty) return 'Email is required';
     if (!_emailRegExp.hasMatch(value)) return 'Enter a valid Email';
@@ -88,13 +97,82 @@ class AuthFormNotifier extends StateNotifier<AuthFormState> {
     return null;
   }
 
-  void setLoading(bool isLoading) {
-    state = state.copyWith(isLoading: isLoading);
+  // ---------- AUTH METHODS ----------
+  Future<void> signUp(BuildContext context) async {
+    // Run validation one last time before sending request
+    final emailError = _validateEmail(state.email);
+    final passwordError = _validatePassword(state.password);
+    final confirmPasswordError =
+        _validateConfirmPassword(state.confirmPassword, state.password);
+
+    if (emailError != null || passwordError != null || confirmPasswordError != null) {
+      state = state.copyWith(
+        emailError: emailError,
+        passwordError: passwordError,
+        confirmPasswordError: confirmPasswordError,
+      );
+      return;
+    }
+
+    state = state.copyWith(isLoading: true);
+
+    try {
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: state.email.trim(),
+        password: state.password,
+      );
+
+      state = state.copyWith(success: true, isLoading: false);
+
+      // ✅ Navigate
+      Navigator.pushReplacementNamed(context, '/LogIn');
+    } on FirebaseAuthException catch (e) {
+      state = state.copyWith(
+        isLoading: false,
+        emailError: e.code == 'invalid-email' ? e.message : state.emailError,
+        passwordError:
+            e.code == 'weak-password' ? e.message : state.passwordError,
+      );
+    }
   }
 
-  // Add your async login/signup logic here, using .setLoading(true/false)
+  Future<void> login(BuildContext context) async {
+    final emailError = _validateEmail(state.email);
+    final passwordError = _validatePassword(state.password);
+
+    if (emailError != null || passwordError != null) {
+      state = state.copyWith(
+        emailError: emailError,
+        passwordError: passwordError,
+      );
+      return;
+    }
+
+    state = state.copyWith(isLoading: true);
+
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: state.email.trim(),
+        password: state.password,
+      );
+
+      state = state.copyWith(success: true, isLoading: false);
+
+      // ✅ Navigate
+      Navigator.pushReplacementNamed(context, '/Home');
+    } on FirebaseAuthException catch (e) {
+      state = state.copyWith(
+        isLoading: false,
+        emailError:
+            e.code == 'user-not-found' ? 'No account found' : state.emailError,
+        passwordError:
+            e.code == 'wrong-password' ? 'Incorrect password' : state.passwordError,
+      );
+    }
+  }
 }
 
-final authFormProvider = StateNotifierProvider<AuthFormNotifier, AuthFormState>(
+final authFormProvider =
+    StateNotifierProvider<AuthFormNotifier, AuthFormState>(
   (ref) => AuthFormNotifier(),
 );
