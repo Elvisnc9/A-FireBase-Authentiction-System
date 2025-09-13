@@ -11,16 +11,35 @@ import 'package:quicklo_app/Widget/title.dart';
 import 'package:quicklo_app/provider/auth_provider.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 
-class AuthForm extends ConsumerWidget {
+class AuthForm extends ConsumerStatefulWidget {
   final bool isSignUp;
   const AuthForm({super.key, required this.isSignUp});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<AuthForm> createState() => _AuthFormState();
+}
+
+class _AuthFormState extends ConsumerState<AuthForm> {
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
+
+  bool passwordVisible = false;
+  bool confirmPasswordVisible = false;
+  bool rememberMe = false;
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    confirmPasswordController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final formState = ref.watch(authFormProvider);
     final formNotifier = ref.read(authFormProvider.notifier);
-    bool isLoading = false;
-    bool rememberMe = false;
 
     return EdgeToEdgeWrapperWidget(
       child: Scaffold(
@@ -39,30 +58,34 @@ class AuthForm extends ConsumerWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Headtitle(widget: this),
+                    Headtitle(widget: widget),
                     SizedBox(height: 5.h),
                     EmailField(
                       formState: formState,
                       onChanged: formNotifier.updateEmail,
+                      Controller: emailController,
                     ),
 
                     SizedBox(height: 1.h),
                     PasswordForm(
                       formState: formState,
                       onChanged: formNotifier.updatePassword,
+                       Controller: passwordController,
                     ),
-                    isSignUp
+                    widget.isSignUp
                         ? updatePasswordForm(
                           formState: formState,
                           onchanged: formNotifier.updateConfirmPassword,
+                           controller: passwordController,
+                            passwordController: passwordController.text,
                         )
-                        : SizedBox(height: 1.h),
+                        : SizedBox(height: 1.5.h),
 
                     //Remember Me And A Forgotten Password Button
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        isSignUp
+                        widget.isSignUp
                             ? Row(
                               children: [
                                 Checkbox(
@@ -101,13 +124,13 @@ class AuthForm extends ConsumerWidget {
                           formState.isLoading
                               ? null // disables button when loading
                               : () async {
-                                if (isSignUp) {
+                                if (widget.isSignUp) {
                                   await formNotifier.signUp(context);
                                 } else {
                                   await formNotifier.login(context);
                                 }
                               },
-                      name: isSignUp ? 'Sign Up' : 'Log In',
+                      name: widget.isSignUp? 'Sign Up' : 'Log In',
                     ),
 
                     SizedBox(height: 1.h),
@@ -118,13 +141,13 @@ class AuthForm extends ConsumerWidget {
                     SizedBox(height: 2.h),
 
                     //Social Authentication Buttons
-                    SocialAuthentications(widget: this),
+                    SocialAuthentications(widget: widget),
 
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          isSignUp
+                          widget.isSignUp
                               ? 'Already have an account?'
                               : 'Don\'t have an account?',
                           style: Theme.of(
@@ -133,12 +156,12 @@ class AuthForm extends ConsumerWidget {
                         ),
                         TextButton(
                           onPressed: () {
-                            isSignUp
+                           widget.isSignUp
                                 ? Navigator.pushNamed(context, '/LogIn')
                                 : Navigator.pushNamed(context, '/SignUp');
                           },
                           child: Text(
-                            isSignUp ? 'Log In' : 'Create an account',
+                           widget.isSignUp? 'Log In' : 'Create an account',
                             style: Theme.of(
                               context,
                             ).textTheme.labelMedium?.copyWith(
@@ -168,10 +191,14 @@ class AuthForm extends ConsumerWidget {
 class updatePasswordForm extends ConsumerStatefulWidget {
   final AuthFormState formState;
   final ValueChanged<String> onchanged;
-  const updatePasswordForm({
+  final TextEditingController controller;
+  final String passwordController;
+  const updatePasswordForm( {
     super.key,
     required this.formState,
     required this.onchanged,
+    required this.controller,
+    required this.passwordController
   });
 
   @override
@@ -195,6 +222,7 @@ class _updatePasswordFormState extends ConsumerState<updatePasswordForm> {
         ),
         SizedBox(height: 1.h),
         TextFormField(
+          controller: widget.controller,
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           decoration: InputDecoration(
             errorText: widget.formState.confirmPasswordError,
@@ -218,19 +246,33 @@ class _updatePasswordFormState extends ConsumerState<updatePasswordForm> {
           ),
           obscureText: !PasswordVisible,
           onChanged: widget.onchanged,
+           validator: (value) {
+    if (value == null || value.isEmpty) {
+      return 'Please confirm your password';
+    }
+    if (value != widget.passwordController) {
+      return 'Passwords do not match';
+    }
+    return null;
+  },
         ),
       ],
     );
   }
 }
 
+
+
+
 class PasswordForm extends ConsumerStatefulWidget {
   final AuthFormState formState;
   final ValueChanged<String> onChanged;
+  final TextEditingController Controller;
   const PasswordForm({
     super.key,
     required this.formState,
     required this.onChanged,
+    required this.Controller,
   });
 
   @override
@@ -253,6 +295,7 @@ class _PasswordFormState extends ConsumerState<PasswordForm> {
         ),
         SizedBox(height: 1.h),
         TextFormField(
+          controller:  widget.Controller,
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           decoration: InputDecoration(
             errorText: widget.formState.passwordError,
@@ -285,10 +328,12 @@ class _PasswordFormState extends ConsumerState<PasswordForm> {
 class EmailField extends StatelessWidget {
   final AuthFormState formState;
   final ValueChanged<String> onChanged;
+  final TextEditingController Controller;
   const EmailField({
     super.key,
     required this.formState,
     required this.onChanged,
+    required this.Controller
   });
 
   @override
@@ -305,6 +350,7 @@ class EmailField extends StatelessWidget {
         ),
         SizedBox(height: 1.h),
         TextFormField(
+          controller: Controller,
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
 
           decoration: InputDecoration(
