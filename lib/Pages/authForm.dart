@@ -76,7 +76,7 @@ class _AuthFormState extends ConsumerState<AuthForm> {
                         ? updatePasswordForm(
                           formState: formState,
                           onchanged: formNotifier.updateConfirmPassword,
-                           controller: passwordController,
+                           controller: confirmPasswordController ,
                             passwordController: passwordController.text,
                         )
                         : SizedBox(height: 1.5.h),
