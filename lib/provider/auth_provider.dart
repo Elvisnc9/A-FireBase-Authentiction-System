@@ -127,12 +127,23 @@ class AuthFormNotifier extends StateNotifier<AuthFormState> {
       // ✅ Navigate
       Navigator.pushReplacementNamed(context, '/LogIn');
     } on FirebaseAuthException catch (e) {
+      state = state.copyWith(isLoading: false);
+
+      switch(e.code){
+        case 'Invaild-email':
       state = state.copyWith(
-        isLoading: false,
-        emailError: e.code == 'invalid-email' ? e.message : state.emailError,
-        passwordError:
-            e.code == 'weak-password' ? e.message : state.passwordError,
-      );
+        emailError:'invalid-email');
+        break;
+        case 'email-already-in-use':
+        state =state.copyWith(emailError: 'The email is already in use');
+        break;
+        case 'weak-Password':
+        state = state.copyWith(passwordError: 'Password is too weak');
+        break;
+        default:
+        state = state.copyWith(emailError:  e.message);
+      }
+      
     }
   }
 
@@ -161,15 +172,28 @@ class AuthFormNotifier extends StateNotifier<AuthFormState> {
       // ✅ Navigate
       Navigator.pushReplacementNamed(context, '/Home');
     } on FirebaseAuthException catch (e) {
+      state = state.copyWith(isLoading: false);
+
+      switch(e.code){
+        case 'user-not-found':
       state = state.copyWith(
-        isLoading: false,
-        emailError:
-            e.code == 'user-not-found' ? 'No account found' : state.emailError,
-        passwordError:
-            e.code == 'wrong-password' ? 'Incorrect password' : state.passwordError,
-      );
+        emailError: 'user-not-found');
+        break;
+        case 'wrong_password':
+        state =state.copyWith(passwordError: 'Incorrect Password');
+        break;
+        case 'invalid-credentials':
+        state.copyWith(
+        passwordError: 'Invalid password or account');
+        break;
+        case 'to-many-request':
+        state = state.copyWith(emailError: 'Too many attempt. Try again later.');
+        break;
+        default:
+        state= state.copyWith(emailError: e.message);
+        break;   
     }
-  }
+  }}
 }
 
 final authFormProvider =

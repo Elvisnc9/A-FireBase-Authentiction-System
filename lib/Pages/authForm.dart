@@ -70,14 +70,14 @@ class _AuthFormState extends ConsumerState<AuthForm> {
                     PasswordForm(
                       formState: formState,
                       onChanged: formNotifier.updatePassword,
-                       Controller: passwordController,
+                      Controller: passwordController,
                     ),
                     widget.isSignUp
                         ? updatePasswordForm(
                           formState: formState,
                           onchanged: formNotifier.updateConfirmPassword,
-                           controller: confirmPasswordController ,
-                            passwordController: passwordController.text,
+                          controller: confirmPasswordController,
+                          passwordController: passwordController.text,
                         )
                         : SizedBox(height: 1.5.h),
 
@@ -130,7 +130,7 @@ class _AuthFormState extends ConsumerState<AuthForm> {
                                   await formNotifier.login(context);
                                 }
                               },
-                      name: widget.isSignUp? 'Sign Up' : 'Log In',
+                      name: widget.isSignUp ? 'Sign Up' : 'Log In',
                     ),
 
                     SizedBox(height: 1.h),
@@ -156,12 +156,12 @@ class _AuthFormState extends ConsumerState<AuthForm> {
                         ),
                         TextButton(
                           onPressed: () {
-                           widget.isSignUp
+                            widget.isSignUp
                                 ? Navigator.pushNamed(context, '/LogIn')
                                 : Navigator.pushNamed(context, '/SignUp');
                           },
                           child: Text(
-                           widget.isSignUp? 'Log In' : 'Create an account',
+                            widget.isSignUp ? 'Log In' : 'Create an account',
                             style: Theme.of(
                               context,
                             ).textTheme.labelMedium?.copyWith(
@@ -193,12 +193,12 @@ class updatePasswordForm extends ConsumerStatefulWidget {
   final ValueChanged<String> onchanged;
   final TextEditingController controller;
   final String passwordController;
-  const updatePasswordForm( {
+  const updatePasswordForm({
     super.key,
     required this.formState,
     required this.onchanged,
     required this.controller,
-    required this.passwordController
+    required this.passwordController,
   });
 
   @override
@@ -246,23 +246,20 @@ class _updatePasswordFormState extends ConsumerState<updatePasswordForm> {
           ),
           obscureText: !PasswordVisible,
           onChanged: widget.onchanged,
-           validator: (value) {
-    if (value == null || value.isEmpty) {
-      return 'Please confirm your password';
-    }
-    if (value != widget.passwordController) {
-      return 'Passwords do not match';
-    }
-    return null;
-  },
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Please confirm your password';
+            }
+            if (value != widget.passwordController) {
+              return 'Passwords do not match';
+            }
+            return null;
+          },
         ),
       ],
     );
   }
 }
-
-
-
 
 class PasswordForm extends ConsumerStatefulWidget {
   final AuthFormState formState;
@@ -295,7 +292,7 @@ class _PasswordFormState extends ConsumerState<PasswordForm> {
         ),
         SizedBox(height: 1.h),
         TextFormField(
-          controller:  widget.Controller,
+          controller: widget.Controller,
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           decoration: InputDecoration(
             errorText: widget.formState.passwordError,
@@ -333,7 +330,7 @@ class EmailField extends StatelessWidget {
     super.key,
     required this.formState,
     required this.onChanged,
-    required this.Controller
+    required this.Controller,
   });
 
   @override
