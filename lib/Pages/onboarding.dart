@@ -1,15 +1,22 @@
+// ignore_for_file: unused_import
+
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lottie/lottie.dart';
 import 'package:quicklo_app/Constants/color.dart';
 import 'package:quicklo_app/Widget/edge-to-edge.dart';
 import 'package:quicklo_app/Widget/submitButton.dart';
 import 'package:quicklo_app/Widget/theme_switch.dart';
+import 'package:quicklo_app/provider/theme_provider.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 
-class Onboarding extends StatelessWidget {
+class Onboarding extends ConsumerWidget {
   const Onboarding({super.key});
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final themeMode = ref.watch(themeProvider);
+    final isLightMode = themeMode == ThemeMode.light;
     return EdgeToEdgeWrapperWidget(
       child: Scaffold(
         body: SafeArea(
@@ -23,11 +30,24 @@ class Onboarding extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-
                 Align(
                   alignment: Alignment.topRight,
-                  child: ThemeSwitchButton()),
-                
+                  child: SizedBox(
+                    child: IconButton(
+                      icon: Icon(
+                        isLightMode ? Icons.nightlight_round : Icons.wb_sunny,
+                        color: isLightMode ? Colors.white : Colors.black,
+                      ),
+
+                      onPressed: () {
+                        ref.read(themeProvider.notifier).state =
+                            themeMode == ThemeMode.light
+                                ? ThemeMode.dark
+                                : ThemeMode.light;
+                      },
+                    ),
+                  ),
+                ),
 
                 SizedBox(
                   height: 40.h,

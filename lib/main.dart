@@ -6,6 +6,7 @@ import 'package:quicklo_app/Pages/home.dart';
 import 'package:quicklo_app/Pages/login.dart';
 import 'package:quicklo_app/Pages/onboarding.dart';
 import 'package:quicklo_app/Pages/signup.dart';
+import 'package:quicklo_app/provider/theme_provider.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 
 Future<void> main() async {
@@ -23,14 +24,17 @@ Future<void> main() async {
   );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+  final themeMode =ref.watch(themeProvider);
+
     return MaterialApp(
       theme: lightTheme,
       darkTheme: darkTheme,
-      themeMode: ThemeMode.system,
+      themeMode: themeMode,
       title: 'Authentication System',
 
       routes: {

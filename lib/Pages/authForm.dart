@@ -44,7 +44,6 @@ class _AuthFormState extends ConsumerState<AuthForm> {
     return EdgeToEdgeWrapperWidget(
       child: Scaffold(
         resizeToAvoidBottomInset: true,
-        backgroundColor: AppColors.dark,
         body: Stack(
           children: [
             SingleChildScrollView(
