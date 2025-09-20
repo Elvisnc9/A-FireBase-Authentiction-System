@@ -30,24 +30,7 @@ class Onboarding extends ConsumerWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Align(
-                  alignment: Alignment.topRight,
-                  child: SizedBox(
-                    child: IconButton(
-                      icon: Icon(
-                        isLightMode ? Icons.nightlight_round : Icons.wb_sunny,
-                        color: isLightMode ? Colors.white : Colors.black,
-                      ),
-
-                      onPressed: () {
-                        ref.read(themeProvider.notifier).state =
-                            themeMode == ThemeMode.light
-                                ? ThemeMode.dark
-                                : ThemeMode.light;
-                      },
-                    ),
-                  ),
-                ),
+                ThemeSwitch(isLightMode: isLightMode, themeMode: themeMode),
 
                 SizedBox(
                   height: 40.h,
@@ -83,3 +66,4 @@ class Onboarding extends ConsumerWidget {
     );
   }
 }
+
