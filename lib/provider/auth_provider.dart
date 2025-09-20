@@ -81,7 +81,7 @@ class AuthFormNotifier extends StateNotifier<AuthFormState> {
   // ---------- VALIDATORS ----------
   String? _validateEmail(String value) {
     if (value.isEmpty) return 'Email is required';
-    if (!_emailRegExp.hasMatch(value)) return 'Enter a valid Email';
+    if (!_emailRegExp.hasMatch(value)) return 'Enter a valid email address';
     return null;
   }
 
@@ -97,15 +97,21 @@ class AuthFormNotifier extends StateNotifier<AuthFormState> {
     return null;
   }
 
+
+
+
+
+
   // ---------- AUTH METHODS ----------
   Future<void> signUp(BuildContext context) async {
-    // Run validation one last time before sending request
     final emailError = _validateEmail(state.email);
     final passwordError = _validatePassword(state.password);
     final confirmPasswordError =
         _validateConfirmPassword(state.confirmPassword, state.password);
 
-    if (emailError != null || passwordError != null || confirmPasswordError != null) {
+    if (emailError != null ||
+        passwordError != null ||
+        confirmPasswordError != null) {
       state = state.copyWith(
         emailError: emailError,
         passwordError: passwordError,
@@ -123,27 +129,17 @@ class AuthFormNotifier extends StateNotifier<AuthFormState> {
       );
 
       state = state.copyWith(success: true, isLoading: false);
-
-      // ✅ Navigate
       Navigator.pushReplacementNamed(context, '/LogIn');
     } on FirebaseAuthException catch (e) {
+      debugPrint('FirebaseAuth Error: code=${e.code}, message=${e.message}');
       state = state.copyWith(isLoading: false);
 
-      switch(e.code){
-        case 'Invaild-email':
       state = state.copyWith(
-        emailError:'invalid-email');
-        break;
-        case 'email-already-in-use':
-        state =state.copyWith(emailError: 'The email is already in use');
-        break;
-        case 'weak-Password':
-        state = state.copyWith(passwordError: 'Password is too weak');
-        break;
-        default:
-        state = state.copyWith(emailError:  e.message);
-      }
-      
+        emailError: _mapErrorCodeToMessage(e.code),
+        passwordError: (e.code == 'weak-password')
+            ? 'Password is too weak'
+            : state.passwordError,
+      );
     }
   }
 
@@ -164,36 +160,49 @@ class AuthFormNotifier extends StateNotifier<AuthFormState> {
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: state.email.trim(),
-        password: state.password,
+        password: state.password.trim(),
       );
 
       state = state.copyWith(success: true, isLoading: false);
-
-      // ✅ Navigate
       Navigator.pushReplacementNamed(context, '/Home');
     } on FirebaseAuthException catch (e) {
       state = state.copyWith(isLoading: false);
 
-      switch(e.code){
-        case 'user-not-found':
-      state = state.copyWith(
-        emailError: 'user-not-found');
-        break;
-        case 'wrong_password':
-        state =state.copyWith(passwordError: 'Incorrect Password');
-        break;
-        case 'invalid-credentials':
-        state.copyWith(
-        passwordError: 'Invalid password or account');
-        break;
-        case 'to-many-request':
-        state = state.copyWith(emailError: 'Too many attempt. Try again later.');
-        break;
-        default:
-        state= state.copyWith(emailError: e.message);
-        break;   
+      if (e.code == 'user-not-found') {
+        state = state.copyWith(emailError: 'No account found for this email');
+      } else if (e.code == 'wrong-password') {
+        state = state.copyWith(passwordError: 'Incorrect password');
+      } else if (e.code == 'too-many-requests') {
+        state = state.copyWith(emailError: 'Too many attempts. Try again later');
+      } else {
+        state = state.copyWith(emailError: _mapErrorCodeToMessage(e.code));
+      }
     }
-  }}
+  }
+
+String _mapErrorCodeToMessage(String code) {
+  switch (code) {
+    case 'invalid-email':
+      return 'Invalid email address';
+    case 'email-already-in-use':
+      return 'This email is already registered';
+    case 'weak-password':
+      return 'Password is too weak';
+    case 'user-disabled':
+      return 'This account has been disabled';
+    case 'wrong-password':
+      return 'Incorrect password';
+    case 'user-not-found':
+      return 'No account found for this email';
+    case 'too-many-requests':
+      return 'Too many attempts. Try again later';
+    case 'invalid-credential':
+      return 'Your email or password is incorrect';
+    default:
+      return 'Authentication failed (code: $code)';
+  }
+}
+
 }
 
 final authFormProvider =
