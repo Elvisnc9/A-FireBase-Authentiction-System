@@ -42,7 +42,7 @@ class _AuthFormState extends ConsumerState<AuthForm> {
   Widget build(BuildContext context) {
     final formState = ref.watch(authFormProvider);
     final themeMode = ref.watch(themeProvider);
-    final isLightMode = ThemeMode == ThemeMode.light;
+    final isLightMode = themeMode == ThemeMode.light;
     final formNotifier = ref.read(authFormProvider.notifier);
 
     return EdgeToEdgeWrapperWidget(
@@ -65,9 +65,10 @@ class _AuthFormState extends ConsumerState<AuthForm> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Headtitle(widget: widget),
-                        ThemeSwitch(isLightMode: isLightMode, themeMode: themeMode  
-                        ,)
-
+                        ThemeSwitch(
+                          isLightMode: isLightMode,
+                          themeMode: themeMode,
+                        ),
                       ],
                     ),
                     SizedBox(height: 4.h),
@@ -161,9 +162,7 @@ class _AuthFormState extends ConsumerState<AuthForm> {
                           widget.isSignUp
                               ? 'Already have an account?'
                               : 'Don\'t have an account?',
-                          style: Theme.of(
-                            context,
-                          ).textTheme.displayMedium,
+                          style: Theme.of(context).textTheme.displayMedium,
                         ),
                         TextButton(
                           onPressed: () {
@@ -226,9 +225,9 @@ class _updatePasswordFormState extends ConsumerState<updatePasswordForm> {
         SizedBox(height: 1.h),
         Text(
           'Confirm Password',
-          style: Theme.of(context).textTheme.labelMedium?.copyWith(
-            fontSize: 12.sp,
-          ),
+          style: Theme.of(
+            context,
+          ).textTheme.labelMedium?.copyWith(fontSize: 12.sp),
         ),
         SizedBox(height: 1.h),
         TextFormField(
@@ -295,9 +294,9 @@ class _PasswordFormState extends ConsumerState<PasswordForm> {
       children: [
         Text(
           'Enter Your Password',
-          style: Theme.of(context).textTheme.labelMedium?.copyWith(
-            fontSize: 12.sp,
-          ),
+          style: Theme.of(
+            context,
+          ).textTheme.labelMedium?.copyWith(fontSize: 12.sp),
         ),
         SizedBox(height: 1.h),
         TextFormField(
@@ -317,7 +316,7 @@ class _PasswordFormState extends ConsumerState<PasswordForm> {
               ),
             ),
             hintText: '8 characters minimum',
-            hintStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 14.sp ),
+            hintStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 14.sp),
             filled: true,
             fillColor: AppColors.lightbox.withOpacity(0.2),
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
@@ -349,9 +348,9 @@ class EmailField extends StatelessWidget {
       children: [
         Text(
           'Your number & email address',
-          style: Theme.of(context).textTheme.labelMedium?.copyWith(
-            fontSize: 12.sp,
-          ),
+          style: Theme.of(
+            context,
+          ).textTheme.labelMedium?.copyWith(fontSize: 12.sp),
         ),
         SizedBox(height: 1.h),
         TextFormField(
