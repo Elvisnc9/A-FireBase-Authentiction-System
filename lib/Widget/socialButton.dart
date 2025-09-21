@@ -35,7 +35,7 @@ class Socials extends StatelessWidget {
                 name,
                 style: Theme.of(
                   context,
-                ).textTheme.labelMedium?.copyWith(fontSize: 12.sp),
+                ).textTheme.labelMedium?.copyWith(fontSize: 12.sp, color: AppColors.light),
               ),
             ],
           ),

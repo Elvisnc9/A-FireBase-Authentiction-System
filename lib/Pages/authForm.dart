@@ -7,8 +7,10 @@ import 'package:quicklo_app/Services/social_auth.dart';
 import 'package:quicklo_app/Widget/divider.dart';
 import 'package:quicklo_app/Widget/edge-to-edge.dart';
 import 'package:quicklo_app/Widget/submitButton.dart';
+import 'package:quicklo_app/Widget/theme_switch.dart';
 import 'package:quicklo_app/Widget/title.dart';
 import 'package:quicklo_app/provider/auth_provider.dart';
+import 'package:quicklo_app/provider/theme_provider.dart';
 import 'package:the_responsive_builder/the_responsive_builder.dart';
 
 class AuthForm extends ConsumerStatefulWidget {
@@ -39,6 +41,8 @@ class _AuthFormState extends ConsumerState<AuthForm> {
   @override
   Widget build(BuildContext context) {
     final formState = ref.watch(authFormProvider);
+    final themeMode = ref.watch(themeProvider);
+    final isLightMode = ThemeMode == ThemeMode.light;
     final formNotifier = ref.read(authFormProvider.notifier);
 
     return EdgeToEdgeWrapperWidget(
@@ -57,8 +61,16 @@ class _AuthFormState extends ConsumerState<AuthForm> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Headtitle(widget: widget),
-                    SizedBox(height: 5.h),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Headtitle(widget: widget),
+                        ThemeSwitch(isLightMode: isLightMode, themeMode: themeMode  
+                        ,)
+
+                      ],
+                    ),
+                    SizedBox(height: 4.h),
                     EmailField(
                       formState: formState,
                       onChanged: formNotifier.updateEmail,
@@ -151,7 +163,7 @@ class _AuthFormState extends ConsumerState<AuthForm> {
                               : 'Don\'t have an account?',
                           style: Theme.of(
                             context,
-                          ).textTheme.labelMedium?.copyWith(fontSize: 12.sp),
+                          ).textTheme.displayMedium,
                         ),
                         TextButton(
                           onPressed: () {
@@ -216,7 +228,6 @@ class _updatePasswordFormState extends ConsumerState<updatePasswordForm> {
           'Confirm Password',
           style: Theme.of(context).textTheme.labelMedium?.copyWith(
             fontSize: 12.sp,
-            color: AppColors.grey,
           ),
         ),
         SizedBox(height: 1.h),
@@ -226,7 +237,7 @@ class _updatePasswordFormState extends ConsumerState<updatePasswordForm> {
           decoration: InputDecoration(
             errorText: widget.formState.confirmPasswordError,
             hintText: '8 characters minimum',
-            hintStyle: TextStyle(fontWeight: FontWeight.bold),
+            hintStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 14.sp),
             filled: true,
             fillColor: AppColors.lightbox.withOpacity(0.2),
 
@@ -286,7 +297,6 @@ class _PasswordFormState extends ConsumerState<PasswordForm> {
           'Enter Your Password',
           style: Theme.of(context).textTheme.labelMedium?.copyWith(
             fontSize: 12.sp,
-            color: AppColors.grey,
           ),
         ),
         SizedBox(height: 1.h),
@@ -307,7 +317,7 @@ class _PasswordFormState extends ConsumerState<PasswordForm> {
               ),
             ),
             hintText: '8 characters minimum',
-            hintStyle: TextStyle(fontWeight: FontWeight.bold),
+            hintStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 14.sp ),
             filled: true,
             fillColor: AppColors.lightbox.withOpacity(0.2),
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
@@ -341,7 +351,6 @@ class EmailField extends StatelessWidget {
           'Your number & email address',
           style: Theme.of(context).textTheme.labelMedium?.copyWith(
             fontSize: 12.sp,
-            color: AppColors.grey,
           ),
         ),
         SizedBox(height: 1.h),
@@ -351,7 +360,7 @@ class EmailField extends StatelessWidget {
 
           decoration: InputDecoration(
             hintText: 'yourName@gmail.com',
-            hintStyle: TextStyle(fontWeight: FontWeight.bold),
+            hintStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 14.sp),
             filled: true,
             fillColor: AppColors.lightbox.withOpacity(0.2),
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),

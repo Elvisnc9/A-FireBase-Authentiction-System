@@ -19,7 +19,7 @@ class ThemeSwitch extends ConsumerWidget {
         child: IconButton(
           icon: Icon(
             isLightMode ? Icons.nightlight_round : Icons.wb_sunny,
-            color: isLightMode ? Colors.white : Colors.black,
+            color: isLightMode ? Colors.black : Colors.white
           ),
           onPressed: () {
             ref.read(themeProvider.notifier).state =
