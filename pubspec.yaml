@@ -44,7 +44,6 @@ dependencies:
   local_auth:
   flutter_secure_storage:
   flutter_riverpod:
-  rive: 
 
 dev_dependencies: 
   flutter_test:

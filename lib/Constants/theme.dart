@@ -10,7 +10,7 @@ final ThemeData darkTheme = ThemeData(
   primaryColor: AppColors.darkbox,
   textTheme: TextTheme(
   titleLarge: GoogleFonts.poppins(
-    fontSize:26.sp,
+    fontSize:30.sp,
     fontWeight: FontWeight.bold,
     color: AppColors.light,
     height: 1.5
@@ -62,7 +62,7 @@ final ThemeData lightTheme = ThemeData(
     primaryColor: AppColors.lightbox,
     textTheme: TextTheme(
   titleLarge: GoogleFonts.poppins(
-    fontSize:26.sp,
+    fontSize:30.sp,
     fontWeight: FontWeight.bold,
     color: AppColors.dark,
     height: 1.5
